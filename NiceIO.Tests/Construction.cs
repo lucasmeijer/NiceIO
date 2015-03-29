@@ -1,23 +1,22 @@
-﻿using System.Configuration;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace NiceIO.Tests
 {
 	[TestFixture]
-    public class Construction
-    {
+	public class Construction
+	{
 		[Test]
 		public void OnlyFileName()
 		{
 			var path = new Path("myfile.exe");
-			Assert.AreEqual("myfile.exe",path.ToString());
+			Assert.AreEqual("myfile.exe", path.ToString());
 		}
 
 		[Test]
 		public void FromStringWithForwardSlash()
 		{
 			var path = new Path("mydir/myfile.exe");
-			Assert.AreEqual("mydir/myfile.exe",path.ToString());
+			Assert.AreEqual("mydir/myfile.exe", path.ToString());
 		}
 
 		[Test]
@@ -31,7 +30,7 @@ namespace NiceIO.Tests
 		public void FromRootedString()
 		{
 			var path = new Path(@"/mydir/myfile.exe");
-			Assert.AreEqual("/mydir/myfile.exe", path.ToString());			
+			Assert.AreEqual("/mydir/myfile.exe", path.ToString());
 		}
 
 		[Test]
@@ -46,15 +45,15 @@ namespace NiceIO.Tests
 		public void FromStringWithTrailingSlash()
 		{
 			var path = new Path("/mydir/myotherdir/");
-			Assert.AreEqual("/mydir/myotherdir", path.ToString());		
-			Assert.AreEqual("myotherdir",path.FileName);		
+			Assert.AreEqual("/mydir/myotherdir", path.ToString());
+			Assert.AreEqual("myotherdir", path.FileName);
 		}
 
 		[Test]
 		public void FromStringWithMultipleSlashes()
 		{
 			var path = new Path("///mydir////myfile.txt");
-			Assert.AreEqual("/mydir/myfile.txt",path.ToString());
+			Assert.AreEqual("/mydir/myfile.txt", path.ToString());
 		}
-    }
+	}
 }

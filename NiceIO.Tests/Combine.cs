@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 
 namespace NiceIO.Tests
@@ -12,13 +9,13 @@ namespace NiceIO.Tests
 		[Test]
 		public void WithTrailingSlash()
 		{
-			Assert.AreEqual("mysubdir",new Path("mydir").Combine("mysubdir/").FileName);
+			Assert.AreEqual("mysubdir", new Path("mydir").Combine("mysubdir/").FileName);
 		}
 
 		[Test]
 		public void WithRootedArgument()
 		{
-			Assert.Throws<ArgumentException>(()=>new Path("/somedir").Combine(new Path("/other")));
+			Assert.Throws<ArgumentException>(() => new Path("/somedir").Combine(new Path("/other")));
 		}
 
 		[Test]

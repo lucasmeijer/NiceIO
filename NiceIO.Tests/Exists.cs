@@ -8,7 +8,7 @@ namespace NiceIO.Tests
 		[Test]
 		public void FileExists()
 		{
-			PopulateTempDir(new[] {"somefile"});	
+			PopulateTempDir(new[] {"somefile"});
 			Assert.IsTrue(_tempPath.Combine("somefile").Exists());
 			Assert.IsTrue(_tempPath.Combine("somefile").FileExists());
 			Assert.IsFalse(_tempPath.Combine("somefile").DirectoryExists());
@@ -17,7 +17,7 @@ namespace NiceIO.Tests
 		[Test]
 		public void DirectoryExists()
 		{
-			PopulateTempDir(new[] { "somefile/" });
+			PopulateTempDir(new[] {"somefile/"});
 			Assert.IsTrue(_tempPath.Combine("somefile").Exists());
 			Assert.IsFalse(_tempPath.Combine("somefile").FileExists());
 			Assert.IsTrue(_tempPath.Combine("somefile").DirectoryExists());

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 
 namespace NiceIO.Tests
@@ -13,8 +10,8 @@ namespace NiceIO.Tests
 		[Test]
 		public void DeleteFile()
 		{
-			PopulateTempDir(new [] { "somefile"});
-		
+			PopulateTempDir(new[] {"somefile"});
+
 			var path = _tempPath.Combine("somefile");
 			Assert.IsTrue(path.FileExists());
 			path.Delete();
@@ -28,7 +25,7 @@ namespace NiceIO.Tests
 			PopulateTempDir(new[]
 			{
 				"somedir/",
-				"somedir/somefile" 
+				"somedir/somefile"
 			});
 
 			var path = _tempPath.Combine("somedir");

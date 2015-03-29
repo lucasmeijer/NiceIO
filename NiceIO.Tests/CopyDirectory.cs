@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace NiceIO.Tests
 {
@@ -14,7 +8,7 @@ namespace NiceIO.Tests
 		[Test]
 		public void InsideSameDirectory()
 		{
-			PopulateTempDir(new [] { "somedir/","somedir/myfile"});
+			PopulateTempDir(new[] {"somedir/", "somedir/myfile"});
 
 			_tempPath.Combine("somedir").Copy(_tempPath.Combine("somedir2"));
 

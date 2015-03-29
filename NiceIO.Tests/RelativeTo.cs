@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 
 namespace NiceIO.Tests
@@ -21,7 +17,7 @@ namespace NiceIO.Tests
 		[Test]
 		public void RootedAndRelative()
 		{
-			Assert.Throws<ArgumentException>(() => new Path("/mydir1/mydir2/myfile").RelativeTo(new Path("myfile")));			
+			Assert.Throws<ArgumentException>(() => new Path("/mydir1/mydir2/myfile").RelativeTo(new Path("myfile")));
 		}
 
 		[Test]
@@ -39,13 +35,13 @@ namespace NiceIO.Tests
 		[Test]
 		public void RelativeAndRelative()
 		{
-			Assert.AreEqual("mydir2/myfile",new Path("mydir1/mydir2/myfile").RelativeTo(new Path("mydir1")).ToString());
+			Assert.AreEqual("mydir2/myfile", new Path("mydir1/mydir2/myfile").RelativeTo(new Path("mydir1")).ToString());
 		}
 
 		[Test]
 		public void ToAnUnrelatedDirectory()
 		{
-			Assert.Throws<ArgumentException>(()=>new Path("/mydir1/mydir2/myfile").RelativeTo(new Path("/unrelated")));
+			Assert.Throws<ArgumentException>(() => new Path("/mydir1/mydir2/myfile").RelativeTo(new Path("/unrelated")));
 		}
 	}
 }

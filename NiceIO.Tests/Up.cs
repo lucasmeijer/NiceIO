@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 
 namespace NiceIO.Tests
@@ -20,14 +17,14 @@ namespace NiceIO.Tests
 		public void UpFromFile()
 		{
 			var path = new Path("myfile.exe").Up();
-			Assert.AreEqual("", path.ToString());			
+			Assert.AreEqual("", path.ToString());
 		}
 
 		[Test]
 		public void UpFromFileInRoot()
 		{
 			var path = new Path("/myfile.exe").Up();
-			Assert.AreEqual("/", path.ToString());				
+			Assert.AreEqual("/", path.ToString());
 		}
 
 		[Test]

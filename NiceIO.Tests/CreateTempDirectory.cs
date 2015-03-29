@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using NUnit.Framework;
 
 namespace NiceIO.Tests
@@ -16,7 +12,7 @@ namespace NiceIO.Tests
 			var path = Path.CreateTempDirectory("myprefix");
 			Assert.IsTrue(Directory.Exists(path.ToString()));
 			Assert.IsFalse(path.IsRelative);
-			StringAssert.Contains("myprefix",path.ToString());
+			StringAssert.Contains("myprefix", path.ToString());
 		}
 	}
 }
