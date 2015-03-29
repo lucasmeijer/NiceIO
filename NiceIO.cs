@@ -302,6 +302,17 @@ namespace NiceIO
 					return candidate.CreateDirectory();
 			}
 		}
+
+		public void Move(Path dest)
+		{
+			ThrowIfRelative();
+			if (dest.IsRelative)
+				throw new ArgumentException("You cannot use a relative path as destination for Move()");
+
+			EnsureDirectoryExists(dest.Parent());
+			File.Move(ToString(), dest.ToString());
+		}
+
 		#endregion
 		
 		private void ThrowIfRelative()
