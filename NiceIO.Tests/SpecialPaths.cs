@@ -18,8 +18,8 @@ namespace NiceIO.Tests
 		[Test]
 		public void HomeDirectory()
 		{
-			Console.WriteLine(Path.UserDirectory);
-			Assert.IsTrue(Path.UserDirectory.DirectoryExists());
+			Console.WriteLine(Path.HomeDirectory);
+			Assert.IsTrue(Path.HomeDirectory.DirectoryExists());
 		}
 	}
 }
