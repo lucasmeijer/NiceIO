@@ -26,6 +26,14 @@ namespace NiceIO
 			_elements = split.Where(s => s.Length > 0).ToArray();
 		}
 
+		private static bool IsRelativeFromSplitString(IEnumerable<string> split)
+		{
+			if (!split.Any())
+				return false;
+
+			//did the string start with a slash? -> rooted
+			return split.First().Length != 0;
+		}
 		private Path(string[] elements, bool isRelative, string driveLetter)
 		{
 			_elements = elements;
@@ -292,15 +300,6 @@ namespace NiceIO
 				return path.Substring(2);
 			}
 			return path;
-		}
-
-		private static bool IsRelativeFromSplitString(IEnumerable<string> split)
-		{
-			if (!split.Any())
-				return false;
-
-			//did the string start with a slash? -> rooted
-			return split.First().Length != 0;
 		}
 
 		private static string[] SplitOnSlashes(string path)
