@@ -40,6 +40,17 @@ namespace NiceIO
 			get { return _elements.Last(); }
 		}
 
+		public string ExtensionWithDot
+		{
+			get
+			{
+				var last = _elements.Last();
+				var index = last.LastIndexOf(".");
+				if (index < 0) return String.Empty;
+				return last.Substring(index);
+			}
+		}
+
 		private string ParseDriveLetter(string path)
 		{
 			if (path.Length >= 2 && path[1] == ':')
