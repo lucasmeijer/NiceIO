@@ -34,6 +34,14 @@ namespace NiceIO.Tests
 		}
 
 		[Test]
+		public void OnExistingDirectory()
+		{
+			PopulateTempDir(new[] { "somedir/", "myfile.txt" });
+
+			Assert.Throws<System.IO.IOException>(() => _tempPath.Combine("myfile.txt").Copy(_tempPath.Combine("somedir")));
+		}
+
+		[Test]
 		public void WithRelativeSource()
 		{
 			Assert.Throws<InvalidOperationException>(()=>new Path("somedir/somefile").Copy(new Path("irrelevant")));
