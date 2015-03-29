@@ -38,7 +38,8 @@ namespace NiceIO.Tests
 		public void FromStringWithWindowsDrive()
 		{
 			var path = new Path(@"C:\mydir\myfile.exe");
-			Assert.AreEqual("C:/mydir/myfile.exe", path.ToString());				
+			Assert.AreEqual("C:/mydir/myfile.exe", path.ToString());
+			Assert.IsFalse(path.IsRelative);
 		}
 
 		[Test]

@@ -37,5 +37,12 @@ namespace NiceIO.Tests
 
 			Assert.IsFalse(path.DirectoryExists());
 		}
+
+		[Test]
+		public void DeleteRelativePath()
+		{
+			var path = new Path("mydir/myfile.txt");
+			Assert.Throws<InvalidOperationException>(() => path.Delete());
+		}
 	}
 }

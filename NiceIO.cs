@@ -11,13 +11,39 @@ namespace NiceIO
     {
 	    private readonly string[] _elements;
 	    private readonly bool _isRelative;
+	    private string _driveLetter;
 
 	    public Path(string path)
 	    {
+		    path = ParseDriveLetter(path);
+
 		    var split = SplitOnSlashes(path);
-		    _isRelative = !(split.Length > 0 && split[0].Length == 0);
+		    
+			_isRelative = IsRelativeFromSplitString(split);
+
 		    _elements = split.Where(s => s.Length > 0).ToArray();
 	    }
+
+	    private string ParseDriveLetter(string path)
+	    {
+		    if (path.Length >= 2 && path[1] == ':')
+		    {
+			    _driveLetter = path[0].ToString();
+			    return path.Substring(2);
+		    }
+		    return path;
+	    }
+
+	    private static bool IsRelativeFromSplitString(IEnumerable<string> split)
+	    {
+		    if (!split.Any())
+			    return false;
+
+			//did the string start with a slash? -> rooted
+		    return split.First().Length != 0;
+	    }
+
+	    public bool IsRelative{ get { return _isRelative;}}
 
 	    private static string[] SplitOnSlashes(string path)
 	    {
@@ -33,6 +59,11 @@ namespace NiceIO
 	    public override string ToString()
 	    {
 		    var sb = new StringBuilder();
+		    if (_driveLetter != null)
+		    {
+			    sb.Append(_driveLetter);
+			    sb.Append(":");
+		    }
 		    if (!_isRelative)
 			    sb.Append("/");
 		    bool first = true;
@@ -98,12 +129,20 @@ namespace NiceIO
 
 	    public void Delete()
 	    {
+		    ThrowIfRelative();
+
 		    if (FileExists())
 				File.Delete(ToString());
 		    else if (DirectoryExists())
 			    Directory.Delete(ToString(),true);
 			else
 				throw new InvalidOperationException("Trying to delete a path that does not exist: "+ToString());
+	    }
+
+	    private void ThrowIfRelative()
+	    {
+		    if (_isRelative)
+				throw new InvalidOperationException("You are attempting an operation on a Path that requires an absolute path, but the path is relative");
 	    }
 
 	    public Path CreateFile()

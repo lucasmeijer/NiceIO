@@ -20,5 +20,11 @@ namespace NiceIO.Tests
 		{
 			_tempPath.Combine("not_yet_existing_dir/myfile").CreateFile().FileExists();
 		}
+
+		[Test]
+		public void OnRelativePath()
+		{
+			Assert.Throws<InvalidOperationException>(() => new Path("mydir/myfile.txt").CreateFile());
+		}
 	}
 }

@@ -15,6 +15,7 @@ namespace NiceIO.Tests
 		{
 			var path = Path.CreateTempDirectory("myprefix");
 			Assert.IsTrue(Directory.Exists(path.ToString()));
+			Assert.IsFalse(path.IsRelative);
 			StringAssert.Contains("myprefix",path.ToString());
 		}
 	}
