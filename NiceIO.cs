@@ -10,12 +10,12 @@ namespace NiceIO
     public class Path
     {
 	    private readonly string[] _elements;
-	    private readonly bool _rooted;
+	    private readonly bool _isRelative;
 
 	    public Path(string path)
 	    {
 		    var split = SplitOnSlashes(path);
-		    _rooted = split.Length > 0 && split[0].Length == 0;
+		    _isRelative = !(split.Length > 0 && split[0].Length == 0);
 		    _elements = split.Where(s => s.Length > 0).ToArray();
 	    }
 
@@ -24,16 +24,16 @@ namespace NiceIO
 		    return path.Split('/', '\\');
 	    }
 
-	    private Path(string[] elements, bool rooted)
+	    private Path(string[] elements, bool isRelative)
 	    {
 		    _elements = elements;
-		    _rooted = rooted;
+		    _isRelative = isRelative;
 	    }
 
 	    public override string ToString()
 	    {
 		    var sb = new StringBuilder();
-		    if (_rooted)
+		    if (!_isRelative)
 			    sb.Append("/");
 		    bool first = true;
 		    foreach (var element in _elements)
@@ -54,7 +54,7 @@ namespace NiceIO
 
 		    var newElements = _elements.Take(_elements.Length - 1).ToArray();
 
-		    return new Path(newElements, _rooted);
+		    return new Path(newElements, _isRelative);
 	    }
 
 		public static Path CreateTempDirectory(string myprefix)
@@ -93,7 +93,7 @@ namespace NiceIO
 		{
 			var split = SplitOnSlashes(append);
 			var newElements = _elements.Concat(split).ToArray();
-			return new Path(newElements, _rooted);
+			return new Path(newElements, _isRelative);
 		}
 
 	    public void Delete()
