@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace NiceIO
@@ -243,6 +244,13 @@ namespace NiceIO
 
 		public Path CreateFile(string file)
 		{
+			return CreateFile(new Path(file));
+		}
+
+		public Path CreateFile(Path file)
+		{
+			if (!file.IsRelative)
+				throw new ArgumentException("You cannot call CreateFile() on an existing path with a non relative argument");
 			return Combine(file).CreateFile();
 		}
 
@@ -266,6 +274,16 @@ namespace NiceIO
 			return Combine(directory).CreateDirectory();
 		}
 
+		public Path Copy(string dest)
+		{
+			return Copy(new Path(dest));
+		}
+
+		public Path Copy(string dest, Func<Path,bool> fileFilter )
+		{
+			return Copy(new Path(dest), fileFilter);
+		}
+
 		public Path Copy(Path dest)
 		{
 			return Copy(dest,p => true);
@@ -276,7 +294,6 @@ namespace NiceIO
 			ThrowIfRelative();
 			if (dest.IsRelative)
 				throw new ArgumentException("Cannot copy to a relative path");
-
 
 			if (FileExists())
 			{
@@ -328,6 +345,11 @@ namespace NiceIO
 				if (!candidate.Exists())
 					return candidate.CreateDirectory();
 			}
+		}
+
+		public Path Move(string dest)
+		{
+			return Move(new Path(dest));
 		}
 
 		public Path Move(Path dest)
