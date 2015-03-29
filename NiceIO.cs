@@ -57,17 +57,14 @@ namespace NiceIO
 		    return new Path(newElements, _rooted);
 	    }
 
-		public static DeleteOnDisposePath CreateTempDirectory(string myprefix)
+		public static Path CreateTempDirectory(string myprefix)
 		{
 			var random = new Random();
 			while (true)
 			{
-				var candidate = new DeleteOnDisposePath(System.IO.Path.GetTempPath() + "/" + myprefix + "_" + random.Next());
+				var candidate = new Path(System.IO.Path.GetTempPath() + "/" + myprefix + "_" + random.Next());
 				if (!candidate.Exists())
-				{
-					candidate.CreateDirectory();
-					return candidate;
-				}
+					return candidate.CreateDirectory();
 			}
 		}
 
@@ -98,17 +95,20 @@ namespace NiceIO
 			var newElements = _elements.Concat(split).ToArray();
 			return new Path(newElements, _rooted);
 		}
+
+	    public void Delete()
+	    {
+		    if (FileExists())
+				File.Delete(ToString());
+		    else if (DirectoryExists())
+			    Directory.Delete(ToString(),true);
+			else
+				throw new InvalidOperationException("Trying to delete a path that does not exist: "+ToString());
+	    }
+
+	    public void CreateFile()
+	    {
+		    File.WriteAllBytes(ToString(), new byte[0]);
+	    }
     }
-
-	public class DeleteOnDisposePath : Path, IDisposable
-	{
-		public DeleteOnDisposePath(string path) : base(path)
-		{
-		}
-
-		public void Dispose()
-		{
-			Directory.Delete(ToString(), true);
-		}
-	}
 }

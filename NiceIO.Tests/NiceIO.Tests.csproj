@@ -41,7 +41,9 @@
   <ItemGroup>
     <Compile Include="Construction.cs" />
     <Compile Include="CreateTempDirectory.cs" />
+    <Compile Include="Delete.cs" />
     <Compile Include="Exists.cs" />
+    <Compile Include="TempDir.cs" />
     <Compile Include="TestWithTempDir.cs" />
     <Compile Include="Up.cs" />
   </ItemGroup>

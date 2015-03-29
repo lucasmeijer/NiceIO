@@ -5,18 +5,18 @@ namespace NiceIO.Tests
 {
 	public class TestWithTempDir
 	{
-		protected DeleteOnDisposePath _tempPath;
+		protected Path _tempPath;
 
 		[SetUp]
 		public void Setup()
 		{
-			_tempPath = Path.CreateTempDirectory("Exists");
+			_tempPath = Path.CreateTempDirectory("NiceIOTest");
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			_tempPath.Dispose();
+			_tempPath.Delete();
 		}
 
 		protected void PopulateTempDir(string[] entries)
@@ -26,7 +26,7 @@ namespace NiceIO.Tests
 				if (entry[entry.Length - 1] == '/')
 					Directory.CreateDirectory(_tempPath + "/" + entry);
 				else
-					File.WriteAllText(_tempPath+"/"+entry,"hello");
+					File.WriteAllText(_tempPath + "/" + entry, "hello");
 			}
 		}
 	}
