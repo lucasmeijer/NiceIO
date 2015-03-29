@@ -8,11 +8,11 @@ This project is in a very early state and the API is very far from stable.
 Basic usage:
 ```c#
 //paths are immutable
-var path1 = new Path(@"/var/folders/something");
+Path path1 = new Path(@"/var/folders/something");
 // /var/folders/something
 
 //use back,forward,or trailing slashes,  doesnt matter
-var path2 = new Path(@"/var\folders/something///");
+Path path2 = new Path(@"/var\folders/something///");
 // /var/folders/something
 
 //semantically the same
@@ -28,7 +28,7 @@ Path.HomeDirectory;
 // /Users/lucas
 
 //all operations return their destination, so they fluently daisychain
-var myfile = Path.HomeDirectory.CreateDirectory("mysubdir").CreateFile("myfile.txt");
+Path myfile = Path.HomeDirectory.CreateDirectory("mysubdir").CreateFile("myfile.txt");
 // /Users/lucas/mysubdir/myfile.txt
 
 //common operations you know and expect
@@ -40,7 +40,7 @@ myfile.ExtensionWithDot;
 // ".txt"
 
 //getting parent directory
-var dir = myfile.Parent();
+Path dir = myfile.Parent();
 // /User/lucas/mysubdir
 
 //copying files,
