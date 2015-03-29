@@ -309,8 +309,20 @@ namespace NiceIO
 			if (dest.IsRelative)
 				throw new ArgumentException("You cannot use a relative path as destination for Move()");
 
-			EnsureDirectoryExists(dest.Parent());
-			File.Move(ToString(), dest.ToString());
+			if (FileExists())
+			{
+				EnsureDirectoryExists(dest.Parent());
+				File.Move(ToString(), dest.ToString());
+				return;
+			}
+
+			if (DirectoryExists())
+			{
+				Directory.Move(ToString(), dest.ToString());
+				return;
+			}
+
+			throw new ArgumentException("Move() called on a path that doesn't exist: "+ToString());
 		}
 
 		#endregion

@@ -40,6 +40,12 @@ namespace NiceIO.Tests
 		}
 
 		[Test]
+		public void NonExistingFile()
+		{
+			Assert.Throws<ArgumentException>(() => _tempPath.Combine("nonexisting.txt").Copy(_tempPath.Combine("target")));
+		}
+
+		[Test]
 		public void WithRelativeSource()
 		{
 			Assert.Throws<ArgumentException>(() => new Path("somedir/somefile").Copy(new Path("irrelevant")));

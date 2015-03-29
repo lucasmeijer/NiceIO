@@ -30,7 +30,13 @@ namespace NiceIO.Tests
 
 			AssertTempDir(new[] { "mydir/", "mydir/mytarget.txt" });
 		}
-		
+
+		[Test]
+		public void NonExistingFile()
+		{
+			Assert.Throws<ArgumentException>(()=>_tempPath.Combine("nonexisting.txt").Move(_tempPath.Combine("target")));
+		}
+
 		[Test]
 		public void OnExistingDirectory()
 		{

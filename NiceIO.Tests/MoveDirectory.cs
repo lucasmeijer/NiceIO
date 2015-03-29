@@ -1,33 +1,30 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace NiceIO.Tests
 {
 	[TestFixture]
-	public class CopyDirectory : TestWithTempDir
+	public class MoveDirectory : TestWithTempDir
 	{
 		[Test]
 		public void InsideSameDirectory()
 		{
-			PopulateTempDir(new[] {"somedir/", "somedir/myfile"});
+			PopulateTempDir(new[] { "somedir/", "somedir/myfile" });
 
-			_tempPath.Combine("somedir").Copy(_tempPath.Combine("somedir2"));
+			_tempPath.Combine("somedir").Move(_tempPath.Combine("somedir2"));
 
 			AssertTempDir(new[]
 			{
-				"somedir/",
-				"somedir/myfile",
 				"somedir2/",
 				"somedir2/myfile"
 			});
 		}
-
+		/*
 		[Test]
 		public void WithFilter()
 		{
 			PopulateTempDir(new[] { "somedir/", "somedir/myfile", "somedir/myfile2" });
 
-			_tempPath.Combine("somedir").Copy(_tempPath.Combine("somedir2"),p=>p.FileName!="myfile");
+			_tempPath.Combine("somedir").Copy(_tempPath.Combine("somedir2"), p => p.FileName != "myfile");
 
 			AssertTempDir(new[]
 			{
@@ -60,6 +57,6 @@ namespace NiceIO.Tests
 				"targetdir/pre_existing_file",
 				"targetdir/myfile",
 			});
-		}
+		}*/
 	}
 }
