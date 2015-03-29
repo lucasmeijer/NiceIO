@@ -54,6 +54,7 @@
     <Compile Include="MoveDirectory.cs" />
     <Compile Include="MoveFile.cs" />
     <Compile Include="RelativeTo.cs" />
+    <Compile Include="SpecialPaths.cs" />
     <Compile Include="TempDir.cs" />
     <Compile Include="TestWithTempDir.cs" />
     <Compile Include="Parent.cs" />

@@ -16,6 +16,9 @@ namespace NiceIO
 		
 		public Path(string path)
 		{
+			if (path==null)
+				throw new ArgumentNullException();
+
 			path = ParseDriveLetter(path);
 
 			var split = path.Split('/', '\\');
@@ -327,7 +330,27 @@ namespace NiceIO
 		}
 
 		#endregion
-		
+
+		#region special paths
+
+		public static Path CurrentDirectory
+		{
+			get
+			{
+				return new Path(Directory.GetCurrentDirectory());
+			}
+		}
+
+		public static Path UserDirectory
+		{
+			get
+			{
+				return new Path(Environment.GetEnvironmentVariable("USERPROFILE"));
+			}
+		}
+
+		#endregion
+
 		private void ThrowIfRelative()
 		{
 			if (_isRelative)

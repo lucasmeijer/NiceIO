@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace NiceIO.Tests
 {
@@ -54,6 +55,12 @@ namespace NiceIO.Tests
 		{
 			var path = new Path("///mydir////myfile.txt");
 			Assert.AreEqual("/mydir/myfile.txt", path.ToString());
+		}
+
+		[Test]
+		public void WithNullArgument()
+		{
+			Assert.Throws<ArgumentNullException>(() => new Path(null));
 		}
 	}
 }
