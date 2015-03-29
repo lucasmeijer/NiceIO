@@ -54,7 +54,7 @@
     <Compile Include="RelativeTo.cs" />
     <Compile Include="TempDir.cs" />
     <Compile Include="TestWithTempDir.cs" />
-    <Compile Include="Up.cs" />
+    <Compile Include="Parent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
