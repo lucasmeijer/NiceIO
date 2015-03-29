@@ -49,6 +49,9 @@ namespace NiceIO
 
 	    public Path Up()
 	    {
+			if (_elements.Length == 0)
+				throw new InvalidOperationException("Up() is called on an empty path");
+
 		    var newElements = _elements.Take(_elements.Length - 1).ToArray();
 
 		    return new Path(newElements, _rooted);

@@ -29,5 +29,11 @@ namespace NiceIO.Tests
 			var path = new Path("/myfile.exe").Up();
 			Assert.AreEqual("/", path.ToString());				
 		}
+
+		[Test]
+		public void UpFromEmpty()
+		{
+			Assert.Throws<InvalidOperationException>(() => new Path("/").Up());
+		}
 	}
 }
