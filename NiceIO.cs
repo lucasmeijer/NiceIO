@@ -192,10 +192,14 @@ namespace NiceIO
 			return !(a == b);
 		}
 
-		public bool HasExtension(string extension)
+		public bool HasExtension(params string[] extensions)
 		{
-			var withDot = extension.StartsWith(".") ? extension : "." + extension;
-			return withDot == ExtensionWithDot;
+			return extensions.Any(e => WithDot(e) == ExtensionWithDot);
+		}
+
+		private static string WithDot(string extension)
+		{
+			return extension.StartsWith(".") ? extension : "." + extension;
 		}
 
 		private bool IsEmpty()
@@ -237,6 +241,11 @@ namespace NiceIO
 			return this;
 		}
 
+		public Path CreateFile(string file)
+		{
+			return Combine(file).CreateFile();
+		}
+
 		public Path CreateDirectory()
 		{
 			ThrowIfRelative();
@@ -244,22 +253,36 @@ namespace NiceIO
 			return this;
 		}
 
+		public Path CreateDirectory(string directory)
+		{
+			return CreateDirectory(new Path(directory));
+		}
+
+		public Path CreateDirectory(Path directory)
+		{
+			if (!directory.IsRelative)
+				throw new ArgumentException("Cannot call CreateDirectory with an absolute argument");
+
+			return Combine(directory).CreateDirectory();
+		}
+
 		public Path Copy(Path dest)
 		{
 			return Copy(dest,p => true);
 		}
 
-		public Path Copy(Path dest, Func<Path, bool> filter)
+		public Path Copy(Path dest, Func<Path, bool> fileFilter)
 		{
 			ThrowIfRelative();
 			if (dest.IsRelative)
 				throw new ArgumentException("Cannot copy to a relative path");
 
-			if (!filter(dest))
-				return null;
 
 			if (FileExists())
 			{
+				if (!fileFilter(dest))
+					return null;
+
 				EnsureDirectoryExists(dest.Parent());
 				File.Copy(ToString(), dest.ToString(), true);
 				return dest;
@@ -269,7 +292,7 @@ namespace NiceIO
 			{
 				EnsureDirectoryExists(dest);
 				foreach (var thing in Contents())
-					thing.Copy(dest.Combine(thing.RelativeTo(this)),filter);
+					thing.Copy(dest.Combine(thing.RelativeTo(this)),fileFilter);
 				return dest;
 			}
 			
