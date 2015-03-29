@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace NiceIO.Tests
 {
 	[TestFixture]
-	public class Copy : TestWithTempDir
+	public class CopyFile : TestWithTempDir
 	{
 		[Test]
 		public void FileToSameDirectory()

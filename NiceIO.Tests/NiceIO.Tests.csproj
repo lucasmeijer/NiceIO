@@ -40,11 +40,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Construction.cs" />
-    <Compile Include="Copy.cs" />
+    <Compile Include="CopyDirectory.cs" />
+    <Compile Include="CopyFile.cs" />
     <Compile Include="CreateFile.cs" />
     <Compile Include="CreateTempDirectory.cs" />
     <Compile Include="Delete.cs" />
+    <Compile Include="Equality.cs" />
     <Compile Include="Exists.cs" />
+    <Compile Include="ContentsTests.cs" />
     <Compile Include="TempDir.cs" />
     <Compile Include="TestWithTempDir.cs" />
     <Compile Include="Up.cs" />

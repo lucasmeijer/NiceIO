@@ -45,6 +45,11 @@ namespace NiceIO
 
 	    public bool IsRelative{ get { return _isRelative;}}
 
+	    public string FileName
+	    {
+		    get { return _elements.Last(); }
+	    }
+
 	    private static string[] SplitOnSlashes(string path)
 	    {
 		    return path.Split('/', '\\');
@@ -177,6 +182,71 @@ namespace NiceIO
 			EnsureDirectoryExists(dest.Up());
 		    File.Copy(ToString(), dest.ToString(), true);
 	    }
+
+	    public IEnumerable<Path> Files(SearchOption searchOption = SearchOption.TopDirectoryOnly)
+	    {
+		    return Directory.GetFiles(ToString(), "*", searchOption).Select(s => new Path(s));
+	    }
+
+		public IEnumerable<Path> Files(Func<Path,bool> filter)
+		{
+			return Files().Where(filter);
+		}
+
+	    public IEnumerable<Path> Contents(SearchOption searchOption = SearchOption.TopDirectoryOnly)
+	    {
+		    return Files(searchOption).Concat(Directories(searchOption));
+	    }
+
+	    public IEnumerable<Path> Directories(SearchOption searchOption = SearchOption.TopDirectoryOnly)
+	    {
+		    return Directory.GetDirectories(ToString(), "*", searchOption).Select(s => new Path(s));
+	    }
+
+		public override bool Equals(Object obj)
+		{
+			if (obj == null)
+				return false;
+
+			// If parameter cannot be cast to Point return false.
+			Path p = obj as Path;
+			if ((System.Object) p == null)
+				return false;
+
+			if (p._isRelative != _isRelative)
+				return false;
+			if (p._driveLetter != _driveLetter)
+				return false;
+
+			if (p._elements.Length != _elements.Length)
+				return false;
+
+			for (int i=0;i!=_elements.Length;i++)
+				if (p._elements[i] != _elements[i])
+					return false;
+
+			return true;
+		}
+
+		public static bool operator ==(Path a, Path b)
+		{
+			// If both are null, or both are same instance, return true.
+			if (ReferenceEquals(a, b))
+				return true;
+
+			// If one is null, but not both, return false.
+			if (((object) a == null) || ((object) b == null))
+				return false;
+
+			// Return true if the fields match:
+			return a.Equals(b);
+		}
+
+		public static bool operator !=(Path a, Path b)
+		{
+			return !(a == b);
+		}
+
     }
 
 	public enum DeleteMode
