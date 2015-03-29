@@ -173,6 +173,8 @@ namespace NiceIO
 			ThrowIfRelative();
 			if (dest.IsRelative)
 				throw new InvalidOperationException("Cannot copy to a relative path");
+
+			EnsureDirectoryExists(dest.Up());
 		    File.Copy(ToString(), dest.ToString(), true);
 	    }
     }
