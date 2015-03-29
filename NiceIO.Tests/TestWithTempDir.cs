@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Net;
 using NUnit.Framework;
 
 namespace NiceIO.Tests
@@ -33,11 +34,20 @@ namespace NiceIO.Tests
 
 		protected void AssertTempDir(string[] entries)
 		{
+			entries = entries.OrderBy(s => s).ToArray();
 			var expectedPaths = entries.Select(s => _tempPath.Combine(s));
 
-			var actualPaths = _tempPath.Contents(SearchOption.AllDirectories);
+			var actualPaths = _tempPath.Contents(SearchOption.AllDirectories).OrderBy(s=>s.ToString()).ToArray();
 
 			CollectionAssert.AreEquivalent(expectedPaths, actualPaths);
+
+			for (int i = 0; i != entries.Length; i++)
+			{
+				if (!entries[i].EndsWith("/"))
+					continue;
+
+				Assert.IsTrue(actualPaths[i].DirectoryExists());
+			}
 		}
 	}
 }
