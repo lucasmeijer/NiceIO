@@ -253,6 +253,19 @@ namespace NiceIO
 			return this;
 		}
 
+		public Path CreateDirectory(string directory)
+		{
+			return CreateDirectory(new Path(directory));
+		}
+
+		public Path CreateDirectory(Path directory)
+		{
+			if (!directory.IsRelative)
+				throw new ArgumentException("Cannot call CreateDirectory with an absolute argument");
+
+			return Combine(directory).CreateDirectory();
+		}
+
 		public Path Copy(Path dest)
 		{
 			return Copy(dest,p => true);
@@ -384,11 +397,6 @@ namespace NiceIO
 				return true;
 
 			return Parent().IsBelowOrEqual(potentialBasePath);
-		}
-
-		public Path CreateDirectory(string directory)
-		{
-			return Combine(directory).CreateDirectory();
 		}
 	}
 
