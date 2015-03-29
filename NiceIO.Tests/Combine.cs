@@ -14,5 +14,17 @@ namespace NiceIO.Tests
 		{
 			Assert.AreEqual("mysubdir",new Path("mydir").Combine("mysubdir/").FileName);
 		}
+
+		[Test]
+		public void WithRootedArgument()
+		{
+			Assert.Throws<ArgumentException>(()=>new Path("/somedir").Combine(new Path("/other")));
+		}
+
+		[Test]
+		public void Simple()
+		{
+			Assert.AreEqual("/somedir/other/myfile", new Path("/somedir").Combine(new Path("other/myfile")).ToString());
+		}
 	}
 }

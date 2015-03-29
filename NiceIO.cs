@@ -128,9 +128,7 @@ namespace NiceIO
 
 		public Path Combine(string append)
 		{
-			var split = SplitOnSlashes(append);
-			var newElements = _elements.Concat(split.Where(s=>s.Length!=0)).ToArray();
-			return new Path(newElements, _isRelative, _driveLetter);
+			return Combine(new Path(append));
 		}
 
 	    public void Delete(DeleteMode deleteMode = DeleteMode.Normal)
@@ -285,6 +283,13 @@ namespace NiceIO
 			return !(a == b);
 		}
 
+	    public Path Combine(Path toAppend)
+	    {
+		    if (!toAppend.IsRelative)
+				throw new ArgumentException("You cannot .Combine a non-relative path");
+		    
+			return new Path(_elements.Concat(toAppend._elements).ToArray(), _isRelative, _driveLetter);
+	    }
     }
 
 	public enum DeleteMode
