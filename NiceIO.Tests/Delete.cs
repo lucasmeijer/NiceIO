@@ -18,7 +18,8 @@ namespace NiceIO.Tests
 			var path = _tempPath.Combine("somefile");
 			Assert.IsTrue(path.FileExists());
 			path.Delete();
-			Assert.IsFalse(path.FileExists());
+
+			AssertTempDir(new string[0]);
 		}
 
 		[Test]
@@ -35,7 +36,7 @@ namespace NiceIO.Tests
 
 			path.Delete();
 
-			Assert.IsFalse(path.DirectoryExists());
+			AssertTempDir(new string[0]);
 		}
 
 		[Test]
