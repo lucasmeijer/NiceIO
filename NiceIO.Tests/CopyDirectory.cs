@@ -12,7 +12,6 @@ namespace NiceIO.Tests
 	public class CopyDirectory : TestWithTempDir
 	{
 		[Test]
-		[Ignore("WIP")]
 		public void InsideSameDirectory()
 		{
 			PopulateTempDir(new [] { "somedir/","somedir/myfile"});
@@ -23,6 +22,7 @@ namespace NiceIO.Tests
 			{
 				"somedir/",
 				"somedir/myfile",
+				"somedir2/",
 				"somedir2/myfile"
 			});
 		}

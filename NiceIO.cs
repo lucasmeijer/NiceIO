@@ -186,8 +186,8 @@ namespace NiceIO
 		    } else if (DirectoryExists())
 		    {
 			    EnsureDirectoryExists(dest);
-				//foreach(var file in Files())
-				//	Copy(file,dest.Combine(file.RelativeTo(this)));
+				foreach(var thing in Contents())
+					thing.Copy(dest.Combine(thing.RelativeTo(this)));
 		    }
 		    else
 		    {

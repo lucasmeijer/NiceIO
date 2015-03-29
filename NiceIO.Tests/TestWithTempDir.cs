@@ -35,18 +35,18 @@ namespace NiceIO.Tests
 		protected void AssertTempDir(string[] entries)
 		{
 			entries = entries.OrderBy(s => s).ToArray();
-			var expectedPaths = entries.Select(s => _tempPath.Combine(s));
+			var expectedPaths = entries.Select(s => _tempPath.Combine(s).RelativeTo(_tempPath));
 
 			var actualPaths = _tempPath.Contents(SearchOption.AllDirectories).OrderBy(s=>s.ToString()).ToArray();
 
-			CollectionAssert.AreEquivalent(expectedPaths, actualPaths);
+			CollectionAssert.AreEquivalent(expectedPaths, actualPaths.Select(p => p.RelativeTo(_tempPath)));
 
 			for (int i = 0; i != entries.Length; i++)
 			{
 				if (!entries[i].EndsWith("/"))
 					continue;
 
-				Assert.IsTrue(actualPaths[i].DirectoryExists());
+				Assert.IsTrue(actualPaths[i].DirectoryExists(), actualPaths[i]+" was expected to be a directory");
 			}
 		}
 	}
