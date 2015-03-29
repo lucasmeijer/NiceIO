@@ -38,5 +38,27 @@ namespace NiceIO.Tests
 				"somedir2/myfile2"
 			});
 		}
+
+		public void IntoExistingDirectory()
+		{
+			PopulateTempDir(new[]
+			{
+				"somedir/", 
+				"somedir/myfile", 
+				"targetdir/",
+				"targetdir/pre_existing_file",
+			});
+
+			_tempPath.Combine("somedir").Copy(_tempPath.Combine("targetdir"));
+
+			AssertTempDir(new[]
+			{
+				"somedir/",
+				"somedir/myfile",
+				"targetdir/",
+				"targetdir/pre_existing_file",
+				"targetdir/myfile",
+			});
+		}
 	}
 }

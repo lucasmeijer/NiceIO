@@ -12,7 +12,6 @@ namespace NiceIO
 		private readonly bool _isRelative;
 		private string _driveLetter;
 
-
 #region construction
 		
 		public Path(string path)
@@ -304,9 +303,7 @@ namespace NiceIO
 			}
 		}
 		#endregion
-
 		
-
 		private void ThrowIfRelative()
 		{
 			if (_isRelative)
