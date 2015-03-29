@@ -293,7 +293,7 @@ namespace NiceIO
 		{
 			ThrowIfRelative();
 			if (dest.IsRelative)
-				throw new ArgumentException("Cannot copy to a relative path");
+				dest = Parent().Combine(dest);
 
 			if (FileExists())
 			{
