@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.Configuration;
 using NUnit.Framework;
 
 namespace NiceIO.Tests
@@ -50,6 +46,13 @@ namespace NiceIO.Tests
 		{
 			var path = new Path("/mydir/myotherdir/");
 			Assert.AreEqual("/mydir/myotherdir", path.ToString());							
+		}
+
+		[Test]
+		public void FromStringWithMultipleSlashes()
+		{
+			var path = new Path("///mydir////myfile.txt");
+			Assert.AreEqual("/mydir/myfile.txt",path.ToString());
 		}
     }
 }
