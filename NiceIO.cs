@@ -345,7 +345,9 @@ namespace NiceIO
 		{
 			get
 			{
-				return new Path(Environment.GetEnvironmentVariable("USERPROFILE"));
+				if (System.IO.Path.DirectorySeparatorChar=='\\')
+					return new Path(Environment.GetEnvironmentVariable("USERPROFILE"));
+				return new Path (Environment.GetFolderPath(Environment.SpecialFolder.Personal));
 			}
 		}
 
