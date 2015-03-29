@@ -10,10 +10,24 @@ namespace NiceIO.Tests
 	public class Up
 	{
 		[Test]
-		public void UpFromFile()
+		public void UpFromFileInDirectory()
 		{
 			var path = new Path("mydir/myotherdir/myfile.exe").Up();
 			Assert.AreEqual("mydir/myotherdir", path.ToString());
+		}
+
+		[Test]
+		public void UpFromFile()
+		{
+			var path = new Path("myfile.exe").Up();
+			Assert.AreEqual("", path.ToString());			
+		}
+
+		[Test]
+		public void UpFromFileInRoot()
+		{
+			var path = new Path("/myfile.exe").Up();
+			Assert.AreEqual("/", path.ToString());				
 		}
 	}
 }

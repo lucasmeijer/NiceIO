@@ -40,6 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Construction.cs" />
+    <Compile Include="CreateTempDirectory.cs" />
+    <Compile Include="Exists.cs" />
     <Compile Include="Up.cs" />
   </ItemGroup>
   <ItemGroup>

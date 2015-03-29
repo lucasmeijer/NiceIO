@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
@@ -13,14 +14,20 @@ namespace NiceIO
 
 	    public Path(string path)
 	    {
-		    var split = path.Split('/', '\\');
+		    var split = SplitOnSlashes(path);
 		    _rooted = split.Length > 0 && split[0].Length == 0;
 		    _elements = split.Where(s => s.Length > 0).ToArray();
 	    }
 
-	    private Path(string[] elements)
+	    private static string[] SplitOnSlashes(string path)
+	    {
+		    return path.Split('/', '\\');
+	    }
+
+	    private Path(string[] elements, bool rooted)
 	    {
 		    _elements = elements;
+		    _rooted = rooted;
 	    }
 
 	    public override string ToString()
@@ -44,7 +51,61 @@ namespace NiceIO
 	    {
 		    var newElements = _elements.Take(_elements.Length - 1).ToArray();
 
-		    return new Path(newElements);
+		    return new Path(newElements, _rooted);
 	    }
+
+		public static DeleteOnDisposePath CreateTempDirectory(string myprefix)
+		{
+			var random = new Random();
+			while (true)
+			{
+				var candidate = new DeleteOnDisposePath(System.IO.Path.GetTempPath() + "/" + myprefix + "_" + random.Next());
+				if (!candidate.Exists())
+				{
+					candidate.CreateDirectory();
+					return candidate;
+				}
+			}
+		}
+
+	    public bool Exists()
+	    {
+		    return FileExists() || DirectoryExists();
+	    }
+
+	    public bool DirectoryExists()
+	    {
+		    return Directory.Exists(ToString());
+	    }
+
+	    public bool FileExists()
+	    {
+		    return File.Exists(ToString());
+	    }
+
+		public Path CreateDirectory()
+		{
+			Directory.CreateDirectory(ToString());
+			return this;
+		}
+
+		public Path Combine(string append)
+		{
+			var split = SplitOnSlashes(append);
+			var newElements = _elements.Concat(split).ToArray();
+			return new Path(newElements, _rooted);
+		}
     }
+
+	public class DeleteOnDisposePath : Path, IDisposable
+	{
+		public DeleteOnDisposePath(string path) : base(path)
+		{
+		}
+
+		public void Dispose()
+		{
+			Directory.Delete(ToString(), true);
+		}
+	}
 }
