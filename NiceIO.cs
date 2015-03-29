@@ -241,6 +241,11 @@ namespace NiceIO
 			return this;
 		}
 
+		public Path CreateFile(string file)
+		{
+			return Combine(file).CreateFile();
+		}
+
 		public Path CreateDirectory()
 		{
 			ThrowIfRelative();
@@ -379,6 +384,11 @@ namespace NiceIO
 				return true;
 
 			return Parent().IsBelowOrEqual(potentialBasePath);
+		}
+
+		public Path CreateDirectory(string directory)
+		{
+			return Combine(directory).CreateDirectory();
 		}
 	}
 

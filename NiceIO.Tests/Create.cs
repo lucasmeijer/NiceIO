@@ -25,6 +25,18 @@ namespace NiceIO.Tests
 		}
 
 		[Test]
+		public void File_WithArgument()
+		{
+			Assert.IsTrue(_tempPath.CreateFile("myfile").FileExists());
+		}
+
+		[Test]
+		public void File_WithArgumentInDirectory()
+		{
+			Assert.IsTrue(_tempPath.CreateFile("mydir/myfile").FileExists());
+		}
+
+		[Test]
 		public void Directory_SimpleCase()
 		{
 			Assert.IsTrue(_tempPath.Combine("mydir").CreateDirectory().DirectoryExists());
@@ -40,6 +52,18 @@ namespace NiceIO.Tests
 		public void Directory_OnRelativePath()
 		{
 			Assert.Throws<ArgumentException>(() => new Path("mydir/mydir2").CreateDirectory());
+		}
+
+		[Test]
+		public void Directory_WithArgument()
+		{
+			Assert.IsTrue(_tempPath.CreateDirectory("mysubdir").DirectoryExists());
+		}
+
+		[Test]
+		public void Directory_WithArgumentInDirectory()
+		{
+			Assert.IsTrue(_tempPath.CreateDirectory("mysubdir/mysubdir2").DirectoryExists());
 		}
 	}
 }
