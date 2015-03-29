@@ -49,6 +49,7 @@
     <Compile Include="Equality.cs" />
     <Compile Include="Exists.cs" />
     <Compile Include="ContentsTests.cs" />
+    <Compile Include="RelativeTo.cs" />
     <Compile Include="TempDir.cs" />
     <Compile Include="TestWithTempDir.cs" />
     <Compile Include="Up.cs" />

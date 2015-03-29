@@ -180,8 +180,45 @@ namespace NiceIO
 			if (dest.IsRelative)
 				throw new InvalidOperationException("Cannot copy to a relative path");
 
-			EnsureDirectoryExists(dest.Up());
-		    File.Copy(ToString(), dest.ToString(), true);
+
+		    if (FileExists())
+		    {
+				EnsureDirectoryExists(dest.Up());
+			    File.Copy(ToString(), dest.ToString(), true);
+		    } else if (DirectoryExists())
+		    {
+			    EnsureDirectoryExists(dest);
+				//foreach(var file in Files())
+				//	Copy(file,dest.Combine(file.RelativeTo(this)));
+		    }
+		    else
+		    {
+			    throw new ArgumentException("Copy() called on path that doesnt exist: "+ToString());
+		    }
+	    }
+
+	    public Path RelativeTo(Path path)
+	    {
+			if (!IsBelowOrEqual(path))
+				throw new ArgumentException("Path.RelativeTo() was invoked with two paths that are unrelated. invoked on: "+ToString()+" asked to be made relative to: "+path);
+
+		    return new Path(_elements.Skip(path._elements.Length).ToArray(), true, null);
+	    }
+
+	    private bool IsBelowOrEqual(Path potentialBasePath)
+	    {
+		    if (IsEmpty())
+			    return false;
+
+		    if (Equals(potentialBasePath))
+			    return true;
+
+		    return Up().IsBelowOrEqual(potentialBasePath);
+	    }
+
+	    private bool IsEmpty()
+	    {
+		    return _elements.Length == 0;
 	    }
 
 	    public IEnumerable<Path> Files(SearchOption searchOption = SearchOption.TopDirectoryOnly)
