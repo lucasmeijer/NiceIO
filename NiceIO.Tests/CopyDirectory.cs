@@ -20,5 +20,23 @@ namespace NiceIO.Tests
 				"somedir2/myfile"
 			});
 		}
+
+		[Test]
+		public void WithFilter()
+		{
+			PopulateTempDir(new[] { "somedir/", "somedir/myfile", "somedir/myfile2" });
+
+			_tempPath.Combine("somedir").Copy(_tempPath.Combine("somedir2"),p=>p.FileName!="myfile");
+
+			AssertTempDir(new[]
+			{
+				"somedir/",
+				"somedir/myfile",
+				"somedir/myfile2",
+
+				"somedir2/",
+				"somedir2/myfile2"
+			});
+		}
 	}
 }

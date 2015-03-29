@@ -176,10 +176,17 @@ namespace NiceIO
 
 		public void Copy(Path dest)
 		{
+			Copy(dest,p => true);
+		}
+
+		public void Copy(Path dest, Func<Path,bool> filter)
+		{
 			ThrowIfRelative();
 			if (dest.IsRelative)
 				throw new InvalidOperationException("Cannot copy to a relative path");
 
+			if (!filter(dest))
+				return;
 
 			if (FileExists())
 			{
@@ -190,7 +197,7 @@ namespace NiceIO
 			{
 				EnsureDirectoryExists(dest);
 				foreach (var thing in Contents())
-					thing.Copy(dest.Combine(thing.RelativeTo(this)));
+					thing.Copy(dest.Combine(thing.RelativeTo(this)),filter);
 			}
 			else
 			{
