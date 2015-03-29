@@ -19,11 +19,21 @@ namespace NiceIO
 		{
 			path = ParseDriveLetter(path);
 
-			var split = SplitOnSlashes(path);
+			var split = path.Split('/', '\\');
 
 			_isRelative = IsRelativeFromSplitString(split);
 
 			_elements = split.Where(s => s.Length > 0).ToArray();
+		}
+		
+		private string ParseDriveLetter(string path)
+		{
+			if (path.Length >= 2 && path[1] == ':')
+			{
+				_driveLetter = path[0].ToString();
+				return path.Substring(2);
+			}
+			return path;
 		}
 
 		private static bool IsRelativeFromSplitString(IEnumerable<string> split)
@@ -34,6 +44,7 @@ namespace NiceIO
 			//did the string start with a slash? -> rooted
 			return split.First().Length != 0;
 		}
+
 		private Path(string[] elements, bool isRelative, string driveLetter)
 		{
 			_elements = elements;
@@ -46,12 +57,12 @@ namespace NiceIO
 			return Combine(new Path(append));
 		}
 
-		public Path Combine(Path toAppend)
+		public Path Combine(Path append)
 		{
-			if (!toAppend.IsRelative)
+			if (!append.IsRelative)
 				throw new ArgumentException("You cannot .Combine a non-relative path");
 
-			return new Path(_elements.Concat(toAppend._elements).ToArray(), _isRelative, _driveLetter);
+			return new Path(_elements.Concat(append._elements).ToArray(), _isRelative, _driveLetter);
 		}
 #endregion construction
 
@@ -294,20 +305,7 @@ namespace NiceIO
 		}
 		#endregion
 
-		private string ParseDriveLetter(string path)
-		{
-			if (path.Length >= 2 && path[1] == ':')
-			{
-				_driveLetter = path[0].ToString();
-				return path.Substring(2);
-			}
-			return path;
-		}
-
-		private static string[] SplitOnSlashes(string path)
-		{
-			return path.Split('/', '\\');
-		}
+		
 
 		private void ThrowIfRelative()
 		{
