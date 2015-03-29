@@ -10,7 +10,10 @@ namespace NiceIO.Tests
 		{
 			PopulateTempDir(new[] { "somedir/", "somedir/myfile" });
 
-			_tempPath.Combine("somedir").Move(_tempPath.Combine("somedir2"));
+			var destination = _tempPath.Combine("somedir2");
+			var returnValue = _tempPath.Combine("somedir").Move(destination);
+
+			Assert.AreEqual(destination,returnValue);
 
 			AssertTempDir(new[]
 			{

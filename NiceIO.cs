@@ -303,7 +303,7 @@ namespace NiceIO
 			}
 		}
 
-		public void Move(Path dest)
+		public Path Move(Path dest)
 		{
 			ThrowIfRelative();
 			if (dest.IsRelative)
@@ -313,13 +313,13 @@ namespace NiceIO
 			{
 				EnsureDirectoryExists(dest.Parent());
 				File.Move(ToString(), dest.ToString());
-				return;
+				return dest;
 			}
 
 			if (DirectoryExists())
 			{
 				Directory.Move(ToString(), dest.ToString());
-				return;
+				return dest;
 			}
 
 			throw new ArgumentException("Move() called on a path that doesn't exist: "+ToString());
