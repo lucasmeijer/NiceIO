@@ -14,7 +14,9 @@ namespace NiceIO.Tests
 
 			var path = _tempPath.Combine("myfile.txt");
 			var dest = _tempPath.Combine("mycopy.txt");
-			path.Copy(dest);
+			
+			var result = path.Copy(dest);
+			Assert.AreEqual(dest, result);
 
 			AssertTempDir(new[] {"myfile.txt", "mycopy.txt"});
 		}

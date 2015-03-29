@@ -241,35 +241,36 @@ namespace NiceIO
 			return this;
 		}
 
-		public void Copy(Path dest)
+		public Path Copy(Path dest)
 		{
-			Copy(dest,p => true);
+			return Copy(dest,p => true);
 		}
 
-		public void Copy(Path dest, Func<Path,bool> filter)
+		public Path Copy(Path dest, Func<Path, bool> filter)
 		{
 			ThrowIfRelative();
 			if (dest.IsRelative)
 				throw new ArgumentException("Cannot copy to a relative path");
 
 			if (!filter(dest))
-				return;
+				return null;
 
 			if (FileExists())
 			{
 				EnsureDirectoryExists(dest.Parent());
 				File.Copy(ToString(), dest.ToString(), true);
+				return dest;
 			}
-			else if (DirectoryExists())
+			
+			if (DirectoryExists())
 			{
 				EnsureDirectoryExists(dest);
 				foreach (var thing in Contents())
 					thing.Copy(dest.Combine(thing.RelativeTo(this)),filter);
+				return dest;
 			}
-			else
-			{
-				throw new ArgumentException("Copy() called on path that doesnt exist: " + ToString());
-			}
+			
+			throw new ArgumentException("Copy() called on path that doesnt exist: " + ToString());
 		}
 
 		public void Delete(DeleteMode deleteMode = DeleteMode.Normal)

@@ -11,7 +11,9 @@ namespace NiceIO.Tests
 		{
 			PopulateTempDir(new[] {"somedir/", "somedir/myfile"});
 
-			_tempPath.Combine("somedir").Copy(_tempPath.Combine("somedir2"));
+			var dest = _tempPath.Combine("somedir2");
+			var result = _tempPath.Combine("somedir").Copy(dest);
+			Assert.AreEqual(dest, result);
 
 			AssertTempDir(new[]
 			{
