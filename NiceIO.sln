@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceIO", "NiceIO.csproj", "{C2AA4CB4-ED9B-46D3-957E-AA2F242FB5C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceIO.Tests", "NiceIO.Tests\NiceIO.Tests.csproj", "{F0E8C359-CF8D-4683-98F1-AA0CAC8B1B89}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{58D75A33-8ED5-4EE6-BE91-967F5AE6BD7B}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C2AA4CB4-ED9B-46D3-957E-AA2F242FB5C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2AA4CB4-ED9B-46D3-957E-AA2F242FB5C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2AA4CB4-ED9B-46D3-957E-AA2F242FB5C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2AA4CB4-ED9B-46D3-957E-AA2F242FB5C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0E8C359-CF8D-4683-98F1-AA0CAC8B1B89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0E8C359-CF8D-4683-98F1-AA0CAC8B1B89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0E8C359-CF8D-4683-98F1-AA0CAC8B1B89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0E8C359-CF8D-4683-98F1-AA0CAC8B1B89}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
