@@ -21,13 +21,13 @@ namespace NiceIO.Tests
 		[Test]
 		public void File_OnRelativePath()
 		{
-			Assert.Throws<InvalidOperationException>(() => new Path("mydir/myfile.txt").CreateFile());
+			Assert.Throws<ArgumentException>(() => new Path("mydir/myfile.txt").CreateFile());
 		}
 
 		[Test]
 		public void Directory_SimpleCase()
 		{
-			Assert.IsTrue(_tempPath.Combine("mydir").CreateDirectory().FileExists());
+			Assert.IsTrue(_tempPath.Combine("mydir").CreateDirectory().DirectoryExists());
 		}
 
 		[Test]
@@ -39,7 +39,7 @@ namespace NiceIO.Tests
 		[Test]
 		public void Directory_OnRelativePath()
 		{
-			Assert.Throws<InvalidOperationException>(() => new Path("mydir/mydir2").CreateDirectory());
+			Assert.Throws<ArgumentException>(() => new Path("mydir/mydir2").CreateDirectory());
 		}
 	}
 }

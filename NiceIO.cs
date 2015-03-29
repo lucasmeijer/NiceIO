@@ -218,6 +218,7 @@ namespace NiceIO
 #region filesystem writing operations
 		public Path CreateFile()
 		{
+			ThrowIfRelative();
 			EnsureDirectoryExists(Parent());
 			File.WriteAllBytes(ToString(), new byte[0]);
 			return this;
@@ -225,6 +226,7 @@ namespace NiceIO
 
 		public Path CreateDirectory()
 		{
+			ThrowIfRelative();
 			Directory.CreateDirectory(ToString());
 			return this;
 		}
@@ -238,7 +240,7 @@ namespace NiceIO
 		{
 			ThrowIfRelative();
 			if (dest.IsRelative)
-				throw new InvalidOperationException("Cannot copy to a relative path");
+				throw new ArgumentException("Cannot copy to a relative path");
 
 			if (!filter(dest))
 				return;
@@ -310,7 +312,7 @@ namespace NiceIO
 		private void ThrowIfRelative()
 		{
 			if (_isRelative)
-				throw new InvalidOperationException("You are attempting an operation on a Path that requires an absolute path, but the path is relative");
+				throw new ArgumentException("You are attempting an operation on a Path that requires an absolute path, but the path is relative");
 		}
 
 		private void EnsureDirectoryExists(Path directory)
