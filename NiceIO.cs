@@ -106,9 +106,19 @@ namespace NiceIO
 				throw new InvalidOperationException("Trying to delete a path that does not exist: "+ToString());
 	    }
 
-	    public void CreateFile()
+	    public Path CreateFile()
 	    {
+		    EnsureDirectoryExists(Up());
 		    File.WriteAllBytes(ToString(), new byte[0]);
+		    return this;
+	    }
+
+	    private void EnsureDirectoryExists(Path directory)
+	    {
+		    if (directory.DirectoryExists())
+			    return;
+		    EnsureDirectoryExists(directory.Up());
+		    directory.CreateDirectory();
 	    }
     }
 }

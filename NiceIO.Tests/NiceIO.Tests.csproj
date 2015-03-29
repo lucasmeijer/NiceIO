@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Construction.cs" />
+    <Compile Include="CreateFile.cs" />
     <Compile Include="CreateTempDirectory.cs" />
     <Compile Include="Delete.cs" />
     <Compile Include="Exists.cs" />
