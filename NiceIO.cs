@@ -192,10 +192,14 @@ namespace NiceIO
 			return !(a == b);
 		}
 
-		public bool HasExtension(string extension)
+		public bool HasExtension(params string[] extensions)
 		{
-			var withDot = extension.StartsWith(".") ? extension : "." + extension;
-			return withDot == ExtensionWithDot;
+			return extensions.Any(e => WithDot(e) == ExtensionWithDot);
+		}
+
+		private static string WithDot(string extension)
+		{
+			return extension.StartsWith(".") ? extension : "." + extension;
 		}
 
 		private bool IsEmpty()

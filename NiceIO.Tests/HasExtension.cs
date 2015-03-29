@@ -32,5 +32,11 @@ namespace NiceIO.Tests
 		{
 			Assert.IsFalse(new Path("myfile.txt").HasExtension("exe"));
 		}
+
+		[Test]
+		public void WithMultipleArguments_Params()
+		{
+			Assert.IsTrue(new Path("myfile.txt").HasExtension("exe","txt"));
+		}
 	}
 }
