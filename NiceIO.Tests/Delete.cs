@@ -44,5 +44,20 @@ namespace NiceIO.Tests
 			var path = new Path("mydir/myfile.txt");
 			Assert.Throws<InvalidOperationException>(() => path.Delete());
 		}
+
+		[Test]
+		public void DeleteDirectoryWhileItIsLocked()
+		{
+			PopulateTempDir(new[] {"somedir/", "somedir/myfile"});
+
+			var directory = _tempPath.Combine("somedir");
+
+			//create a file in the directory and keep an open filehandle to it
+			using (new FileStream(directory.Combine("somefile").ToString(), FileMode.Create))
+			{
+				directory.Delete(DeleteMode.Soft);
+			}
+			Assert.IsFalse(directory.Combine("myfile").FileExists());
+		}
 	}
 }

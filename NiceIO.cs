@@ -127,15 +127,23 @@ namespace NiceIO
 			return new Path(newElements, _isRelative);
 		}
 
-	    public void Delete()
+	    public void Delete(DeleteMode deleteMode = DeleteMode.Normal)
 	    {
 		    ThrowIfRelative();
 
 		    if (FileExists())
 				File.Delete(ToString());
 		    else if (DirectoryExists())
-			    Directory.Delete(ToString(),true);
-			else
+			    try
+			    {
+				    Directory.Delete(ToString(), true);
+			    }
+			    catch (IOException)
+			    {
+				    if (deleteMode == DeleteMode.Normal)
+					    throw;
+			    }
+		    else
 				throw new InvalidOperationException("Trying to delete a path that does not exist: "+ToString());
 	    }
 
@@ -160,4 +168,10 @@ namespace NiceIO
 		    directory.CreateDirectory();
 	    }
     }
+
+	public enum DeleteMode
+	{
+		Normal,
+		Soft
+	}
 }

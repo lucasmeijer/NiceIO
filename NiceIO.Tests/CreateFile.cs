@@ -18,7 +18,7 @@ namespace NiceIO.Tests
 		[Test]
 		public void InNonExistingDirectory()
 		{
-			_tempPath.Combine("not_yet_existing_dir/myfile").CreateFile().FileExists();
+			_tempPath.Combine("not_yet_existing_dir/myotherdir/myfile").CreateFile().FileExists();
 		}
 
 		[Test]
