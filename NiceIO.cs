@@ -364,7 +364,7 @@ namespace NiceIO
 			}
 		}
 
-		public static Path UserDirectory
+		public static Path HomeDirectory
 		{
 			get
 			{
