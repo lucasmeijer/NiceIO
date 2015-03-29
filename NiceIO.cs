@@ -167,6 +167,14 @@ namespace NiceIO
 		    EnsureDirectoryExists(directory.Up());
 		    directory.CreateDirectory();
 	    }
+
+	    public void Copy(Path dest)
+	    {
+			ThrowIfRelative();
+			if (dest.IsRelative)
+				throw new InvalidOperationException("Cannot copy to a relative path");
+		    File.Copy(ToString(), dest.ToString(), true);
+	    }
     }
 
 	public enum DeleteMode
