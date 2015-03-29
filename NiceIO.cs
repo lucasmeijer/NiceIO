@@ -311,6 +311,12 @@ namespace NiceIO
 
 			return new Path(_elements.Concat(toAppend._elements).ToArray(), _isRelative, _driveLetter);
 		}
+
+		public bool HasExtension(string extension)
+		{
+			var withDot = extension.StartsWith(".") ? extension : "." + extension;
+			return withDot == ExtensionWithDot;
+		}
 	}
 
 	public enum DeleteMode

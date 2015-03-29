@@ -50,6 +50,7 @@
     <Compile Include="Exists.cs" />
     <Compile Include="ContentsTests.cs" />
     <Compile Include="Extension.cs" />
+    <Compile Include="HasExtension.cs" />
     <Compile Include="RelativeTo.cs" />
     <Compile Include="TempDir.cs" />
     <Compile Include="TestWithTempDir.cs" />
