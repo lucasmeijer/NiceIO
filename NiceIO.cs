@@ -249,17 +249,18 @@ namespace NiceIO
 			return Copy(dest,p => true);
 		}
 
-		public Path Copy(Path dest, Func<Path, bool> filter)
+		public Path Copy(Path dest, Func<Path, bool> fileFilter)
 		{
 			ThrowIfRelative();
 			if (dest.IsRelative)
 				throw new ArgumentException("Cannot copy to a relative path");
 
-			if (!filter(dest))
-				return null;
 
 			if (FileExists())
 			{
+				if (!fileFilter(dest))
+					return null;
+
 				EnsureDirectoryExists(dest.Parent());
 				File.Copy(ToString(), dest.ToString(), true);
 				return dest;
@@ -269,7 +270,7 @@ namespace NiceIO
 			{
 				EnsureDirectoryExists(dest);
 				foreach (var thing in Contents())
-					thing.Copy(dest.Combine(thing.RelativeTo(this)),filter);
+					thing.Copy(dest.Combine(thing.RelativeTo(this)),fileFilter);
 				return dest;
 			}
 			
