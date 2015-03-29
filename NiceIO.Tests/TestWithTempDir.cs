@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using NUnit.Framework;
 
 namespace NiceIO.Tests
@@ -28,6 +29,15 @@ namespace NiceIO.Tests
 				else
 					File.WriteAllText(_tempPath + "/" + entry, "hello");
 			}
+		}
+
+		protected void AssertTempDir(string[] entries)
+		{
+			var expectedPaths = entries.Select(s => _tempPath.Combine(s));
+
+			var actualPaths = _tempPath.Contents(SearchOption.AllDirectories);
+
+			CollectionAssert.AreEquivalent(expectedPaths, actualPaths);
 		}
 	}
 }

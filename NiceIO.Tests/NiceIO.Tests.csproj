@@ -39,6 +39,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Combine.cs" />
     <Compile Include="Construction.cs" />
     <Compile Include="CopyDirectory.cs" />
     <Compile Include="CopyFile.cs" />

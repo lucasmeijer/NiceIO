@@ -18,7 +18,7 @@ namespace NiceIO.Tests
 			var dest = _tempPath.Combine("mycopy.txt");
 			path.Copy(dest);
 
-			Assert.IsTrue(dest.FileExists());
+			AssertTempDir(new [] { "myfile.txt", "mycopy.txt"});
 		}
 
 		[Test]
@@ -30,7 +30,7 @@ namespace NiceIO.Tests
 			var dest = _tempPath.Combine("mydir/mycopy.txt");
 			path.Copy(dest);
 
-			Assert.IsTrue(dest.FileExists());
+			AssertTempDir(new[] { "myfile.txt", "mydir/","mydir/mycopy.txt" });
 		}
 
 		[Test]
@@ -53,6 +53,5 @@ namespace NiceIO.Tests
 			PopulateTempDir(new[] { "myfile.txt" });
 			Assert.Throws<InvalidOperationException>(() => _tempPath.Combine("file.txt").Copy(new Path("irrelevant")));
 		}
-
 	}
 }

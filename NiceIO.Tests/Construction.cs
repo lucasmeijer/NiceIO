@@ -46,7 +46,8 @@ namespace NiceIO.Tests
 		public void FromStringWithTrailingSlash()
 		{
 			var path = new Path("/mydir/myotherdir/");
-			Assert.AreEqual("/mydir/myotherdir", path.ToString());							
+			Assert.AreEqual("/mydir/myotherdir", path.ToString());		
+			Assert.AreEqual("myotherdir",path.FileName);		
 		}
 
 		[Test]

@@ -55,10 +55,11 @@ namespace NiceIO
 		    return path.Split('/', '\\');
 	    }
 
-	    private Path(string[] elements, bool isRelative)
+	    private Path(string[] elements, bool isRelative, string driveLetter)
 	    {
 		    _elements = elements;
 		    _isRelative = isRelative;
+		    _driveLetter = driveLetter;
 	    }
 
 	    public override string ToString()
@@ -90,7 +91,7 @@ namespace NiceIO
 
 		    var newElements = _elements.Take(_elements.Length - 1).ToArray();
 
-		    return new Path(newElements, _isRelative);
+		    return new Path(newElements, _isRelative, _driveLetter);
 	    }
 
 		public static Path CreateTempDirectory(string myprefix)
@@ -128,8 +129,8 @@ namespace NiceIO
 		public Path Combine(string append)
 		{
 			var split = SplitOnSlashes(append);
-			var newElements = _elements.Concat(split).ToArray();
-			return new Path(newElements, _isRelative);
+			var newElements = _elements.Concat(split.Where(s=>s.Length!=0)).ToArray();
+			return new Path(newElements, _isRelative, _driveLetter);
 		}
 
 	    public void Delete(DeleteMode deleteMode = DeleteMode.Normal)
