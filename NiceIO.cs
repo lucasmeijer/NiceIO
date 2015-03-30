@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace NiceIO
@@ -11,7 +10,7 @@ namespace NiceIO
 	{
 		private readonly string[] _elements;
 		private readonly bool _isRelative;
-		private string _driveLetter;
+		private readonly string _driveLetter;
 
 #region construction
 		
@@ -20,7 +19,7 @@ namespace NiceIO
 			if (path==null)
 				throw new ArgumentNullException();
 
-			path = ParseDriveLetter(path);
+			path = ParseDriveLetter(path, out _driveLetter);
 
 			var split = path.Split('/', '\\');
 
@@ -55,13 +54,15 @@ namespace NiceIO
 			return stack.Count > 0 && stack[stack.Count-1] != "..";
 		}
 
-		private string ParseDriveLetter(string path)
+		private string ParseDriveLetter(string path, out string driveLetter)
 		{
 			if (path.Length >= 2 && path[1] == ':')
 			{
-				_driveLetter = path[0].ToString();
+				driveLetter = path[0].ToString();
 				return path.Substring(2);
 			}
+			
+			driveLetter = null;
 			return path;
 		}
 
@@ -212,6 +213,19 @@ namespace NiceIO
 
 			// Return true if the fields match:
 			return a.Equals(b);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hash = 17;
+				// Suitable nullity checks etc, of course :)
+				hash = hash * 23 + _isRelative.GetHashCode();
+				hash = hash * 23 + _elements.GetHashCode();
+				hash = hash * 23 + _driveLetter.GetHashCode();
+				return hash;
+			}
 		}
 
 		public static bool operator !=(Path a, Path b)
