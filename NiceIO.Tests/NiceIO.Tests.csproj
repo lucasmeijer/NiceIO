@@ -40,6 +40,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChangeExtension.cs" />
     <Compile Include="Combine.cs" />
     <Compile Include="Construction.cs" />
     <Compile Include="CopyDirectory.cs" />

@@ -95,6 +95,31 @@ namespace NiceIO
 
 			return new Path(ParseSplitStringIntoElements(_elements.Concat(append._elements)), _isRelative, _driveLetter);
 		}
+
+		public Path Parent()
+		{
+			if (_elements.Length == 0)
+				throw new InvalidOperationException("Parent() is called on an empty path");
+
+			var newElements = _elements.Take(_elements.Length - 1).ToArray();
+
+			return new Path(newElements, _isRelative, _driveLetter);
+		}
+
+		public Path RelativeTo(Path path)
+		{
+			if (!IsBelowOrEqual(path))
+				throw new ArgumentException("Path.RelativeTo() was invoked with two paths that are unrelated. invoked on: " + ToString() + " asked to be made relative to: " + path);
+
+			return new Path(_elements.Skip(path._elements.Length).ToArray(), true, null);
+		}
+
+		public Path ChangeExtension(string extension)
+		{
+			var newElements = (string[])_elements.Clone();
+			newElements[newElements.Length - 1] = System.IO.Path.ChangeExtension(_elements[_elements.Length - 1], WithDot(extension));
+			return new Path(newElements, _isRelative, _driveLetter);
+		}
 #endregion construction
 
 #region inspection
@@ -139,26 +164,6 @@ namespace NiceIO
 				return last.Substring(index);
 			}
 		}
-
-		public Path Parent()
-		{
-			if (_elements.Length == 0)
-				throw new InvalidOperationException("Parent() is called on an empty path");
-
-			var newElements = _elements.Take(_elements.Length - 1).ToArray();
-
-			return new Path(newElements, _isRelative, _driveLetter);
-		}
-
-		public Path RelativeTo(Path path)
-		{
-			if (!IsBelowOrEqual(path))
-				throw new ArgumentException("Path.RelativeTo() was invoked with two paths that are unrelated. invoked on: " + ToString() + " asked to be made relative to: " + path);
-
-			return new Path(_elements.Skip(path._elements.Length).ToArray(), true, null);
-		}
-
-
 
 		public override string ToString()
 		{
