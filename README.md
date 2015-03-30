@@ -19,6 +19,10 @@ Path path2 = new Path(@"/var\folders/something///");
 path1 == path2;
 // true
 
+// ..'s that are not at the beginning of the path get collapsed
+new Path("/mydir/../myfile.exe");
+// /myfile.exe
+
 //build paths
 path1.Combine("dir1/dir2");
 // /var/folders/something/dir1/dir2

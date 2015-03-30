@@ -26,9 +26,35 @@ namespace NiceIO
 
 			_isRelative = IsRelativeFromSplitString(split);
 
-			_elements = split.Where(s => s.Length > 0).ToArray();
+			_elements = ParseSplitStringIntoElements(split.Where(s => s.Length > 0).ToArray());
 		}
-		
+
+		private string[] ParseSplitStringIntoElements(IEnumerable<string> inputs)
+		{
+			var stack = new List<string>();
+
+			foreach (var input in inputs.Where(input => input.Length != 0))
+			{
+				if (input == "..")
+				{
+					if (HasNonDotDotLastElement(stack))
+					{
+						stack.RemoveAt(stack.Count - 1);
+						continue;
+					}
+					if (!_isRelative)
+						throw new ArgumentException("You cannot create a path that tries to .. past the root");
+				}
+				stack.Add(input);
+			}
+			return stack.ToArray();
+		}
+
+		private static bool HasNonDotDotLastElement(List<string> stack)
+		{
+			return stack.Count > 0 && stack[stack.Count-1] != "..";
+		}
+
 		private string ParseDriveLetter(string path)
 		{
 			if (path.Length >= 2 && path[1] == ':')
@@ -65,7 +91,7 @@ namespace NiceIO
 			if (!append.IsRelative)
 				throw new ArgumentException("You cannot .Combine a non-relative path");
 
-			return new Path(_elements.Concat(append._elements).ToArray(), _isRelative, _driveLetter);
+			return new Path(ParseSplitStringIntoElements(_elements.Concat(append._elements)), _isRelative, _driveLetter);
 		}
 #endregion construction
 

@@ -62,5 +62,25 @@ namespace NiceIO.Tests
 		{
 			Assert.Throws<ArgumentNullException>(() => new Path(null));
 		}
+
+		[Test]
+		public void WithDotDotInPath()
+		{
+			var path = new Path("/mydir/../myotherdir/myfile.txt");
+			Assert.AreEqual("/myotherdir/myfile.txt", path.ToString());			
+		}
+
+		[Test]
+		public void WithDotDotInStartOfRelativePath()
+		{
+			var path = new Path("../../myotherdir/myfile.txt");
+			Assert.AreEqual("../../myotherdir/myfile.txt", path.ToString());
+		}
+
+		[Test]
+		public void WithDotDotInStartOfAbsolutePath()
+		{
+			Assert.Throws<ArgumentException>(() => new Path("/../../myotherdir/myfile.txt"));
+		}
 	}
 }

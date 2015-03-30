@@ -23,5 +23,17 @@ namespace NiceIO.Tests
 		{
 			Assert.AreEqual("/somedir/other/myfile", new Path("/somedir").Combine(new Path("other/myfile")).ToString());
 		}
+
+		[Test]
+		public void WithRelativePathStartingWithDotDot()
+		{
+			Assert.AreEqual("/other/myfile", new Path("/somedir/somedir2").Combine(new Path("../../other/myfile")).ToString());	
+		}
+
+		[Test]
+		public void CombiningDotDotOntoRelativePath()
+		{
+			Assert.AreEqual("../other/myfile", new Path("somedir/somedir2").Combine(new Path("../../../other/myfile")).ToString());	
+		}
 	}
 }
