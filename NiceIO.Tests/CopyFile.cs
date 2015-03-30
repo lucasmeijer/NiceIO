@@ -42,7 +42,7 @@ namespace NiceIO.Tests
 			try
 			{
 				_tempPath.Combine("myfile.txt").Copy(_tempPath.Combine("somedir"));
-			} catch (Exception e)
+			} catch (Exception)
 			{
 				return;
 			}
