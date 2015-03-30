@@ -17,14 +17,6 @@ namespace NiceIO.Tests
 		}
 
 		[Test]
-		public void FilesWithFilter()
-		{
-			PopulateTempDir(new[] {"myfile.txt", "myfile2.exe"});
-
-			CollectionAssert.AreEquivalent(new[] {"myfile2.exe"}, _tempPath.Files(p => p.FileName.Contains("2")).Select(p => p.FileName));
-		}
-
-		[Test]
 		public void FilesRecursive()
 		{
 			PopulateTempDir(new[] {"myfile.txt", "mydir/", "mydir/myfile2.txt"});

@@ -267,16 +267,6 @@ namespace NiceIO
 			return Directory.GetFiles(ToString(), "*", searchOption).Select(s => new Path(s));
 		}
 
-		public IEnumerable<Path> Files(SearchOption searchOption, Func<Path, bool> filter)
-		{
-			return Files(searchOption).Where(filter);
-		}
-
-		public IEnumerable<Path> Files(Func<Path, bool> filter)
-		{
-			return Files().Where(filter);
-		}
-
 		public IEnumerable<Path> Contents(SearchOption searchOption = SearchOption.TopDirectoryOnly)
 		{
 			return Files(searchOption).Concat(Directories(searchOption));
