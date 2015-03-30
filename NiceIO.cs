@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -106,6 +107,11 @@ namespace NiceIO
 		public string FileName
 		{
 			get { return _elements.Last(); }
+		}
+
+		public IEnumerable<string> Elements
+		{
+			get { return _elements; }
 		}
 
 		public bool Exists()
@@ -254,6 +260,11 @@ namespace NiceIO
 		public IEnumerable<Path> Files(SearchOption searchOption = SearchOption.TopDirectoryOnly)
 		{
 			return Directory.GetFiles(ToString(), "*", searchOption).Select(s => new Path(s));
+		}
+
+		public IEnumerable<Path> Files(SearchOption searchOption, Func<Path, bool> filter)
+		{
+			return Files(searchOption).Where(filter);
 		}
 
 		public IEnumerable<Path> Files(Func<Path, bool> filter)
