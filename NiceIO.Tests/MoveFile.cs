@@ -56,7 +56,8 @@ namespace NiceIO.Tests
 		public void WithRelativeDestination()
 		{
 			PopulateTempDir(new[] { "myfile.txt" });
-			Assert.Throws<ArgumentException>(() => _tempPath.Combine("file.txt").Move(new Path("irrelevant")));
+			_tempPath.Combine("myfile.txt").Move(new Path("newfile"));
+			AssertTempDir(new [] {"newfile"});
 		}
 	}
 }

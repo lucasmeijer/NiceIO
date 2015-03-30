@@ -412,7 +412,7 @@ namespace NiceIO
 		{
 			ThrowIfRelative();
 			if (dest.IsRelative)
-				throw new ArgumentException("You cannot use a relative path as destination for Move()");
+				return Move(Parent().Combine(dest));
 
 			if (FileExists())
 			{
