@@ -9,7 +9,7 @@ namespace NiceIO.Tests
 		[Test]
 		public void WithTrailingSlash()
 		{
-			Assert.AreEqual("breakme_mysubdir", new Path("mydir").Combine("mysubdir/").FileName);
+			Assert.AreEqual("mysubdir", new Path("mydir").Combine("mysubdir/").FileName);
 		}
 
 		[Test]
