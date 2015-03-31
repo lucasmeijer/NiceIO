@@ -22,6 +22,12 @@ namespace NiceIO.Tests
 		}
 
 		[Test]
+		public void IsCaseInsensitive()
+		{
+			Assert.IsTrue(new Path("myfile.txt").HasExtension("TxT"));
+		}
+
+		[Test]
 		public void WithDotWrongExtension()
 		{
 			Assert.IsFalse(new Path("myfile.txt").HasExtension(".exe"));
