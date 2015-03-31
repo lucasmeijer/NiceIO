@@ -10,7 +10,7 @@ namespace NiceIO.Tests
 		public void ParentFromFileInDirectory()
 		{
 			var path = new Path("mydir/myotherdir/myfile.exe").Parent();
-			Assert.AreEqual("mydir/myotherdir", path.ToString());
+			Assert.AreEqual("mydir/myotherdir", path.ToString(SlashMode.Forward));
 		}
 
 		[Test]
@@ -24,7 +24,7 @@ namespace NiceIO.Tests
 		public void ParentFromFileInRoot()
 		{
 			var path = new Path("/myfile.exe").Parent();
-			Assert.AreEqual("/", path.ToString());
+			Assert.AreEqual("/", path.ToString(SlashMode.Forward));
 		}
 
 		[Test]

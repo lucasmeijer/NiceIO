@@ -10,7 +10,7 @@ namespace NiceIO.Tests
 		public void ToBaseDirectory()
 		{
 			var relative = new Path("/mydir1/mydir2/myfile").RelativeTo(new Path("/mydir1"));
-			Assert.AreEqual("mydir2/myfile", relative.ToString());
+			Assert.AreEqual("mydir2/myfile", relative.ToString(SlashMode.Forward));
 			Assert.IsTrue(relative.IsRelative);
 		}
 
@@ -35,7 +35,7 @@ namespace NiceIO.Tests
 		[Test]
 		public void RelativeAndRelative()
 		{
-			Assert.AreEqual("mydir2/myfile", new Path("mydir1/mydir2/myfile").RelativeTo(new Path("mydir1")).ToString());
+			Assert.AreEqual("mydir2/myfile", new Path("mydir1/mydir2/myfile").RelativeTo(new Path("mydir1")).ToString(SlashMode.Forward));
 		}
 
 		[Test]

@@ -167,6 +167,11 @@ namespace NiceIO
 
 		public override string ToString()
 		{
+			return ToString(SlashMode.Native);
+		}
+
+		public  string ToString(SlashMode slashMode)
+		{
 			var sb = new StringBuilder();
 			if (_driveLetter != null)
 			{
@@ -174,17 +179,30 @@ namespace NiceIO
 				sb.Append(":");
 			}
 			if (!_isRelative)
-				sb.Append("/");
+				sb.Append(Slash(slashMode));
 			var first = true;
 			foreach (var element in _elements)
 			{
 				if (!first)
-					sb.Append("/");
+					sb.Append(Slash(slashMode));
 
 				sb.Append(element);
 				first = false;
 			}
 			return sb.ToString();
+		}
+
+		static char Slash(SlashMode slashMode)
+		{
+			switch (slashMode)
+			{
+				case SlashMode.Backward:
+					return '\\';
+				case SlashMode.Forward:
+					return '/';
+				default:
+					return System.IO.Path.DirectorySeparatorChar;
+			}
 		}
 
 		public override bool Equals(Object obj)
@@ -469,6 +487,13 @@ namespace NiceIO
 
 			return Parent().IsBelowOrEqual(potentialBasePath);
 		}
+	}
+
+	public enum SlashMode
+	{
+		Native,
+		Forward,
+		Backward
 	}
 
 	public enum DeleteMode

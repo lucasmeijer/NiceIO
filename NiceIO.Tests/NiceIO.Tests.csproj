@@ -61,6 +61,7 @@
     <Compile Include="TempDir.cs" />
     <Compile Include="TestWithTempDir.cs" />
     <Compile Include="Parent.cs" />
+    <Compile Include="ToString.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
