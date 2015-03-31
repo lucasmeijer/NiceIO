@@ -3,7 +3,7 @@
 namespace NiceIO.Tests
 {
 	[TestFixture]
-	public class Extension
+	public class ExtensionWithDot
 	{
 		[Test]
 		public void Simple()
