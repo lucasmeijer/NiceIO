@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System;
+using System.IO;
+using NUnit.Framework;
 
 namespace NiceIO.Tests
 {
@@ -21,45 +23,22 @@ namespace NiceIO.Tests
 				"somedir2/myfile"
 			});
 		}
-		/*
+
 		[Test]
-		public void WithFilter()
-		{
-			PopulateTempDir(new[] { "somedir/", "somedir/myfile", "somedir/myfile2" });
-
-			_tempPath.Combine("somedir").Copy(_tempPath.Combine("somedir2"), p => p.FileName != "myfile");
-
-			AssertTempDir(new[]
-			{
-				"somedir/",
-				"somedir/myfile",
-				"somedir/myfile2",
-
-				"somedir2/",
-				"somedir2/myfile2"
-			});
-		}
-
 		public void IntoExistingDirectory()
 		{
-			PopulateTempDir(new[]
+			var entries = new[]
 			{
 				"somedir/", 
 				"somedir/myfile", 
 				"targetdir/",
 				"targetdir/pre_existing_file",
-			});
+			};
+			PopulateTempDir(entries);
 
-			_tempPath.Combine("somedir").Copy(_tempPath.Combine("targetdir"));
+			Assert.Throws<IOException>(()=>_tempPath.Combine("somedir").Move(_tempPath.Combine("targetdir")));
 
-			AssertTempDir(new[]
-			{
-				"somedir/",
-				"somedir/myfile",
-				"targetdir/",
-				"targetdir/pre_existing_file",
-				"targetdir/myfile",
-			});
-		}*/
+			AssertTempDir(entries);
+		}
 	}
 }
