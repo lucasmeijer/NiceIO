@@ -83,17 +83,17 @@ namespace NiceIO
 			_driveLetter = driveLetter;
 		}
 
-		public Path Combine(string append)
+		public Path Combine(params string[] append)
 		{
-			return Combine(new Path(append));
+			return Combine(append.Select(a=>new Path(a)).ToArray());
 		}
 
-		public Path Combine(Path append)
+		public Path Combine(params Path[] append)
 		{
-			if (!append.IsRelative)
+			if (!append.All(p=>p.IsRelative))
 				throw new ArgumentException("You cannot .Combine a non-relative path");
 
-			return new Path(ParseSplitStringIntoElements(_elements.Concat(append._elements)), _isRelative, _driveLetter);
+			return new Path(ParseSplitStringIntoElements(_elements.Concat(append.SelectMany(p=>p._elements))), _isRelative, _driveLetter);
 		}
 
 		public Path Parent()
