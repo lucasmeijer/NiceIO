@@ -39,14 +39,10 @@ namespace NiceIO.Tests
 			PopulateTempDir(new[] {"somedir/", "myfile.txt"});
 
 			//turns out .net throws an IOException here, and mono an ArgumentException. let's deal with that another day.
-			try
-			{
-				_tempPath.Combine("myfile.txt").Copy(_tempPath.Combine("somedir"));
-			} catch (Exception)
-			{
-				return;
-			}
-			Assert.Fail("Expected to catch an exception here");
+			var result = _tempPath.Combine("myfile.txt").Copy(_tempPath.Combine("somedir"));
+			Assert.AreEqual(_tempPath.Combine("somedir/myfile.txt"), result);
+
+			AssertTempDir(new[] { "myfile.txt", "somedir/", "somedir/myfile.txt" });
 		}
 
 		[Test]

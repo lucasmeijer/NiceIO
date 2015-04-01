@@ -56,6 +56,7 @@ namespace NiceIO.Tests
 			});
 		}
 
+		[Test]
 		public void IntoExistingDirectory()
 		{
 			PopulateTempDir(new[]
@@ -70,11 +71,13 @@ namespace NiceIO.Tests
 
 			AssertTempDir(new[]
 			{
-				"somedir/",
-				"somedir/myfile",
+				"somedir/", 
+				"somedir/myfile", 
 				"targetdir/",
 				"targetdir/pre_existing_file",
-				"targetdir/myfile",
+
+				"targetdir/somedir/",
+				"targetdir/somedir/myfile",	
 			});
 		}
 	}

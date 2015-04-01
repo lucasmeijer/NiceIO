@@ -360,12 +360,16 @@ namespace NiceIO
 			if (dest.IsRelative)
 				dest = Parent().Combine(dest);
 
+			if (dest.DirectoryExists())
+				return Copy(dest.Combine(FileName), fileFilter);
+
 			if (FileExists())
 			{
 				if (!fileFilter(dest))
 					return null;
 
 				EnsureDirectoryExists(dest.Parent());
+
 				File.Copy(ToString(), dest.ToString(), true);
 				return dest;
 			}
@@ -422,6 +426,9 @@ namespace NiceIO
 			ThrowIfRelative();
 			if (dest.IsRelative)
 				return Move(Parent().Combine(dest));
+
+			if (dest.DirectoryExists())
+				return Move(dest.Combine(FileName));
 
 			if (FileExists())
 			{

@@ -36,9 +36,16 @@ namespace NiceIO.Tests
 			};
 			PopulateTempDir(entries);
 
-			Assert.Throws<IOException>(()=>_tempPath.Combine("somedir").Move(_tempPath.Combine("targetdir")));
+			var result = _tempPath.Combine("somedir").Move(_tempPath.Combine("targetdir"));
+			Assert.AreEqual(_tempPath.Combine("targetdir/somedir"), result);
 
-			AssertTempDir(entries);
+			AssertTempDir(new[]
+				{
+				"targetdir/",
+				"targetdir/somedir/",
+				"targetdir/somedir/myfile",
+				"targetdir/pre_existing_file",
+			});
 		}
 	}
 }

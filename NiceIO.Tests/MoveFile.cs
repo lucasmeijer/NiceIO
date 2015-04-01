@@ -43,7 +43,10 @@ namespace NiceIO.Tests
 		{
 			PopulateTempDir(new[] { "somedir/", "myfile.txt" });
 
-			Assert.Throws<IOException>(() => _tempPath.Combine("myfile.txt").Move(_tempPath.Combine("somedir")));
+			var result = _tempPath.Combine("myfile.txt").Move(_tempPath.Combine("somedir"));
+			Assert.AreEqual(_tempPath.Combine("somedir/myfile.txt"), result);
+
+			AssertTempDir(new[] { "somedir/", "somedir/myfile.txt" });
 		}
 
 		[Test]
