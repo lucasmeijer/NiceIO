@@ -19,7 +19,7 @@ namespace NiceIO.Tests
 		[Test]
 		public void Backward()
 		{
-			Assert.AreEqual("a/b", new Path(@"a\b").ToString(SlashMode.Backward));
+			Assert.AreEqual(@"a\b", new Path(@"a/b").ToString(SlashMode.Backward));
 		}
 	}
 }
