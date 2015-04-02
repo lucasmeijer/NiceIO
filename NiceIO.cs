@@ -180,6 +180,16 @@ namespace NiceIO
 			}
 		}
 
+		public string InQuotes()
+		{
+			return "\"" + ToString() + "\"";
+		}
+
+		public string InQuotes(SlashMode slashMode)
+		{
+			return "\"" + ToString(slashMode) + "\"";
+		}
+
 		public override string ToString()
 		{
 			return ToString(SlashMode.Native);
