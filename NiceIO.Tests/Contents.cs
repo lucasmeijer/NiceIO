@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace NiceIO.Tests
 {
 	[TestFixture]
-	public class ContentsTests : TestWithTempDir
+	public class Contents : TestWithTempDir
 	{
 		[Test]
 		public void Files()
