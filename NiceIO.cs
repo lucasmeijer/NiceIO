@@ -107,7 +107,7 @@ namespace NiceIO
 
 		public Path RelativeTo(Path path)
 		{
-			if (!IsBelowOrEqual(path))
+			if (!IsChildOf(path))
 				throw new ArgumentException("Path.RelativeTo() was invoked with two paths that are unrelated. invoked on: " + ToString() + " asked to be made relative to: " + path);
 
 			return new Path(_elements.Skip(path._elements.Length).ToArray(), true, null);
@@ -498,15 +498,23 @@ namespace NiceIO
 			directory.CreateDirectory();
 		}
 
-		private bool IsBelowOrEqual(Path potentialBasePath)
+		public bool IsChildOf(string potentialBasePath)
 		{
+			return IsChildOf(new Path(potentialBasePath));
+		}
+
+		public bool IsChildOf(Path potentialBasePath)
+		{
+			if ((IsRelative && !potentialBasePath.IsRelative) || !IsRelative && potentialBasePath.IsRelative)
+				throw new ArgumentException("You can only call IsChildOf with two relative paths, or with two absolute paths");
+
 			if (IsEmpty())
 				return false;
 
 			if (Equals(potentialBasePath))
 				return true;
 
-			return Parent().IsBelowOrEqual(potentialBasePath);
+			return Parent().IsChildOf(potentialBasePath);
 		}
 
 		public Path ParentContaining(string needle)

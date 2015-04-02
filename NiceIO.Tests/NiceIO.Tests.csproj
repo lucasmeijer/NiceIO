@@ -54,6 +54,7 @@
     <Compile Include="ContentsTests.cs" />
     <Compile Include="ExtensionWithDot.cs" />
     <Compile Include="HasExtension.cs" />
+    <Compile Include="IsChildOf.cs" />
     <Compile Include="MoveDirectory.cs" />
     <Compile Include="MoveFile.cs" />
     <Compile Include="ParentContaining.cs" />
