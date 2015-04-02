@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace NiceIO
 {
@@ -295,19 +296,19 @@ namespace NiceIO
 
 #region directory enumeration
 
-		public IEnumerable<Path> Files(SearchOption searchOption = SearchOption.TopDirectoryOnly)
+		public IEnumerable<Path> Files(bool recurse = false)
 		{
-			return Directory.GetFiles(ToString(), "*", searchOption).Select(s => new Path(s));
+			return Directory.GetFiles(ToString(), "*", recurse ? SearchOption.AllDirectories :  SearchOption.TopDirectoryOnly).Select(s => new Path(s));
 		}
 
-		public IEnumerable<Path> Contents(SearchOption searchOption = SearchOption.TopDirectoryOnly)
+		public IEnumerable<Path> Contents(bool recurse = false)
 		{
-			return Files(searchOption).Concat(Directories(searchOption));
+			return Files(recurse).Concat(Directories(recurse));
 		}
 
-		public IEnumerable<Path> Directories(SearchOption searchOption = SearchOption.TopDirectoryOnly)
+		public IEnumerable<Path> Directories(bool recurse = false)
 		{
-			return Directory.GetDirectories(ToString(), "*", searchOption).Select(s => new Path(s));
+			return Directory.GetDirectories(ToString(), "*", recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).Select(s => new Path(s));
 		}
 
 #endregion

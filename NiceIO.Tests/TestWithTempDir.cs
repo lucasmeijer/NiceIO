@@ -36,7 +36,7 @@ namespace NiceIO.Tests
 			entries = entries.OrderBy(s => s).ToArray();
 			var expectedPaths = entries.Select(s => _tempPath.Combine(s).RelativeTo(_tempPath));
 
-			var actualPaths = _tempPath.Contents(SearchOption.AllDirectories).OrderBy(s => s.ToString()).ToArray();
+			var actualPaths = _tempPath.Contents(recurse: true).OrderBy(s => s.ToString()).ToArray();
 
 			CollectionAssert.AreEquivalent(expectedPaths, actualPaths.Select(p => p.RelativeTo(_tempPath)));
 
