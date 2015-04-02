@@ -6,12 +6,12 @@ namespace NiceIO.Tests
 {
 	public class TestWithTempDir
 	{
-		protected Path _tempPath;
+		protected NPath _tempPath;
 
 		[SetUp]
 		public void Setup()
 		{
-			_tempPath = Path.CreateTempDirectory("NiceIOTest");
+			_tempPath = NPath.CreateTempDirectory("NiceIOTest");
 		}
 
 		[TearDown]

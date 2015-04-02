@@ -12,11 +12,11 @@ This project is in a very early state and the API is very far from stable.
 Basic usage:
 ```c#
 //paths are immutable
-Path path1 = new Path(@"/var/folders/something");
+NPath path1 = new NPath(@"/var/folders/something");
 // /var/folders/something
 
 //use back,forward,or trailing slashes,  doesnt matter
-Path path2 = new Path(@"/var\folders/something///");
+NPath path2 = new NPath(@"/var\folders/something///");
 // /var/folders/something
 
 //semantically the same
@@ -24,7 +24,7 @@ path1 == path2;
 // true
 
 // ..'s that are not at the beginning of the path get collapsed
-new Path("/mydir/../myfile.exe");
+new NPath("/mydir/../myfile.exe");
 // /myfile.exe
 
 //build paths
@@ -32,11 +32,11 @@ path1.Combine("dir1/dir2");
 // /var/folders/something/dir1/dir2
 
 //handy accessors
-Path.HomeDirectory;
+NPath.HomeDirectory;
 // /Users/lucas
 
 //all operations return their destination, so they fluently daisychain
-Path myfile = Path.HomeDirectory.CreateDirectory("mysubdir").CreateFile("myfile.txt");
+NPath myfile = NPath.HomeDirectory.CreateDirectory("mysubdir").CreateFile("myfile.txt");
 // /Users/lucas/mysubdir/myfile.txt
 
 //common operations you know and expect
@@ -48,7 +48,7 @@ myfile.ExtensionWithDot;
 // ".txt"
 
 //getting parent directory
-Path dir = myfile.Parent();
+NPath dir = myfile.Parent();
 // /User/lucas/mysubdir
 
 //copying files,

@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 
 namespace NiceIO
 {
-	public class Path
+	public class NPath
 	{
 		private readonly string[] _elements;
 		private readonly bool _isRelative;
@@ -16,7 +14,7 @@ namespace NiceIO
 
 #region construction
 		
-		public Path(string path)
+		public NPath(string path)
 		{
 			if (path==null)
 				throw new ArgumentNullException();
@@ -76,49 +74,49 @@ namespace NiceIO
 			return split[0].Length != 0 || !split.Any(s => s.Length > 0);
 		}
 
-		private Path(string[] elements, bool isRelative, string driveLetter)
+		private NPath(string[] elements, bool isRelative, string driveLetter)
 		{
 			_elements = elements;
 			_isRelative = isRelative;
 			_driveLetter = driveLetter;
 		}
 
-		public Path Combine(params string[] append)
+		public NPath Combine(params string[] append)
 		{
-			return Combine(append.Select(a=>new Path(a)).ToArray());
+			return Combine(append.Select(a=>new NPath(a)).ToArray());
 		}
 
-		public Path Combine(params Path[] append)
+		public NPath Combine(params NPath[] append)
 		{
 			if (!append.All(p=>p.IsRelative))
 				throw new ArgumentException("You cannot .Combine a non-relative path");
 
-			return new Path(ParseSplitStringIntoElements(_elements.Concat(append.SelectMany(p=>p._elements))), _isRelative, _driveLetter);
+			return new NPath(ParseSplitStringIntoElements(_elements.Concat(append.SelectMany(p=>p._elements))), _isRelative, _driveLetter);
 		}
 
-		public Path Parent()
+		public NPath Parent()
 		{
 			if (_elements.Length == 0)
 				throw new InvalidOperationException("Parent() is called on an empty path");
 
 			var newElements = _elements.Take(_elements.Length - 1).ToArray();
 
-			return new Path(newElements, _isRelative, _driveLetter);
+			return new NPath(newElements, _isRelative, _driveLetter);
 		}
 
-		public Path RelativeTo(Path path)
+		public NPath RelativeTo(NPath path)
 		{
 			if (!IsChildOf(path))
 				throw new ArgumentException("Path.RelativeTo() was invoked with two paths that are unrelated. invoked on: " + ToString() + " asked to be made relative to: " + path);
 
-			return new Path(_elements.Skip(path._elements.Length).ToArray(), true, null);
+			return new NPath(_elements.Skip(path._elements.Length).ToArray(), true, null);
 		}
 
-		public Path ChangeExtension(string extension)
+		public NPath ChangeExtension(string extension)
 		{
 			var newElements = (string[])_elements.Clone();
-			newElements[newElements.Length - 1] = System.IO.Path.ChangeExtension(_elements[_elements.Length - 1], WithDot(extension));
-			return new Path(newElements, _isRelative, _driveLetter);
+			newElements[newElements.Length - 1] = Path.ChangeExtension(_elements[_elements.Length - 1], WithDot(extension));
+			return new NPath(newElements, _isRelative, _driveLetter);
 		}
 #endregion construction
 
@@ -141,30 +139,30 @@ namespace NiceIO
 
 		public bool Exists(string append="")
 		{
-			return Exists(new Path(append));
+			return Exists(new NPath(append));
 		}
 
-		public bool Exists(Path append)
+		public bool Exists(NPath append)
 		{
 			return FileExists(append) || DirectoryExists(append);
 		}
 
 		public bool DirectoryExists(string append="")
 		{
-			return DirectoryExists(new Path(append));
+			return DirectoryExists(new NPath(append));
 		}
 
-		public bool DirectoryExists(Path append)
+		public bool DirectoryExists(NPath append)
 		{
 			return Directory.Exists(Combine(append).ToString());
 		}
 
 		public bool FileExists(string append="")
 		{
-			return FileExists(new Path(append));
+			return FileExists(new NPath(append));
 		}
 
-		public bool FileExists(Path append)
+		public bool FileExists(NPath append)
 		{
 			return File.Exists(Combine(append).ToString());
 		}
@@ -226,7 +224,7 @@ namespace NiceIO
 				case SlashMode.Forward:
 					return '/';
 				default:
-					return System.IO.Path.DirectorySeparatorChar;
+					return Path.DirectorySeparatorChar;
 			}
 		}
 
@@ -236,7 +234,7 @@ namespace NiceIO
 				return false;
 
 			// If parameter cannot be cast to Point return false.
-			var p = obj as Path;
+			var p = obj as NPath;
 			if ((Object)p == null)
 				return false;
 
@@ -255,7 +253,7 @@ namespace NiceIO
 			return true;
 		}
 
-		public static bool operator ==(Path a, Path b)
+		public static bool operator ==(NPath a, NPath b)
 		{
 			// If both are null, or both are same instance, return true.
 			if (ReferenceEquals(a, b))
@@ -282,7 +280,7 @@ namespace NiceIO
 			}
 		}
 
-		public static bool operator !=(Path a, Path b)
+		public static bool operator !=(NPath a, NPath b)
 		{
 			return !(a == b);
 		}
@@ -306,32 +304,32 @@ namespace NiceIO
 
 #region directory enumeration
 
-		public IEnumerable<Path> Files(string filter, bool recurse=false)
+		public IEnumerable<NPath> Files(string filter, bool recurse=false)
 		{
-			return Directory.GetFiles(ToString(),filter, recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).Select(s => new Path(s));
+			return Directory.GetFiles(ToString(),filter, recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).Select(s => new NPath(s));
 		}
 
-		public IEnumerable<Path> Files(bool recurse = false)
+		public IEnumerable<NPath> Files(bool recurse = false)
 		{
 			return Files("*", recurse);
 		}
 
-		public IEnumerable<Path> Contents(string filter, bool recurse = false)
+		public IEnumerable<NPath> Contents(string filter, bool recurse = false)
 		{
 			return Files(filter,recurse).Concat(Directories(filter,recurse));
 		}
 
-		public IEnumerable<Path> Contents(bool recurse = false)
+		public IEnumerable<NPath> Contents(bool recurse = false)
 		{
 			return Contents("*", recurse);
 		}
 
-		public IEnumerable<Path> Directories(string filter, bool recurse = false)
+		public IEnumerable<NPath> Directories(string filter, bool recurse = false)
 		{
-			return Directory.GetDirectories(ToString(), filter, recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).Select(s => new Path(s));
+			return Directory.GetDirectories(ToString(), filter, recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).Select(s => new NPath(s));
 		}
 
-		public IEnumerable<Path> Directories(bool recurse = false)
+		public IEnumerable<NPath> Directories(bool recurse = false)
 		{
 			return Directories("*", recurse);
 		}
@@ -339,7 +337,7 @@ namespace NiceIO
 		#endregion
 
 #region filesystem writing operations
-		public Path CreateFile()
+		public NPath CreateFile()
 		{
 			ThrowIfRelative();
 			EnsureParentDirectoryExists();
@@ -347,31 +345,31 @@ namespace NiceIO
 			return this;
 		}
 
-		public Path CreateFile(string file)
+		public NPath CreateFile(string file)
 		{
-			return CreateFile(new Path(file));
+			return CreateFile(new NPath(file));
 		}
 
-		public Path CreateFile(Path file)
+		public NPath CreateFile(NPath file)
 		{
 			if (!file.IsRelative)
 				throw new ArgumentException("You cannot call CreateFile() on an existing path with a non relative argument");
 			return Combine(file).CreateFile();
 		}
 
-		public Path CreateDirectory()
+		public NPath CreateDirectory()
 		{
 			ThrowIfRelative();
 			Directory.CreateDirectory(ToString());
 			return this;
 		}
 
-		public Path CreateDirectory(string directory)
+		public NPath CreateDirectory(string directory)
 		{
-			return CreateDirectory(new Path(directory));
+			return CreateDirectory(new NPath(directory));
 		}
 
-		public Path CreateDirectory(Path directory)
+		public NPath CreateDirectory(NPath directory)
 		{
 			if (!directory.IsRelative)
 				throw new ArgumentException("Cannot call CreateDirectory with an absolute argument");
@@ -379,22 +377,22 @@ namespace NiceIO
 			return Combine(directory).CreateDirectory();
 		}
 
-		public Path Copy(string dest)
+		public NPath Copy(string dest)
 		{
-			return Copy(new Path(dest));
+			return Copy(new NPath(dest));
 		}
 
-		public Path Copy(string dest, Func<Path,bool> fileFilter )
+		public NPath Copy(string dest, Func<NPath,bool> fileFilter )
 		{
-			return Copy(new Path(dest), fileFilter);
+			return Copy(new NPath(dest), fileFilter);
 		}
 
-		public Path Copy(Path dest)
+		public NPath Copy(NPath dest)
 		{
 			return Copy(dest,p => true);
 		}
 
-		public Path Copy(Path dest, Func<Path, bool> fileFilter)
+		public NPath Copy(NPath dest, Func<NPath, bool> fileFilter)
 		{
 			ThrowIfRelative();
 			if (dest.IsRelative)
@@ -445,23 +443,23 @@ namespace NiceIO
 				throw new InvalidOperationException("Trying to delete a path that does not exist: " + ToString());
 		}
 
-		public static Path CreateTempDirectory(string myprefix)
+		public static NPath CreateTempDirectory(string myprefix)
 		{
 			var random = new Random();
 			while (true)
 			{
-				var candidate = new Path(System.IO.Path.GetTempPath() + "/" + myprefix + "_" + random.Next());
+				var candidate = new NPath(Path.GetTempPath() + "/" + myprefix + "_" + random.Next());
 				if (!candidate.Exists())
 					return candidate.CreateDirectory();
 			}
 		}
 
-		public Path Move(string dest)
+		public NPath Move(string dest)
 		{
-			return Move(new Path(dest));
+			return Move(new NPath(dest));
 		}
 
-		public Path Move(Path dest)
+		public NPath Move(NPath dest)
 		{
 			ThrowIfRelative();
 			if (dest.IsRelative)
@@ -490,21 +488,21 @@ namespace NiceIO
 
 		#region special paths
 
-		public static Path CurrentDirectory
+		public static NPath CurrentDirectory
 		{
 			get
 			{
-				return new Path(Directory.GetCurrentDirectory());
+				return new NPath(Directory.GetCurrentDirectory());
 			}
 		}
 
-		public static Path HomeDirectory
+		public static NPath HomeDirectory
 		{
 			get
 			{
-				if (System.IO.Path.DirectorySeparatorChar=='\\')
-					return new Path(Environment.GetEnvironmentVariable("USERPROFILE"));
-				return new Path (Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+				if (Path.DirectorySeparatorChar=='\\')
+					return new NPath(Environment.GetEnvironmentVariable("USERPROFILE"));
+				return new NPath (Environment.GetFolderPath(Environment.SpecialFolder.Personal));
 			}
 		}
 
@@ -518,10 +516,10 @@ namespace NiceIO
 
 		public void EnsureDirectoryExists(string append = "")
 		{
-			EnsureDirectoryExists(new Path(append));
+			EnsureDirectoryExists(new NPath(append));
 		}
 
-		public void EnsureDirectoryExists(Path append)
+		public void EnsureDirectoryExists(NPath append)
 		{
 			var combined = Combine(append);
 			if (combined.DirectoryExists())
@@ -537,10 +535,10 @@ namespace NiceIO
 
 		public bool IsChildOf(string potentialBasePath)
 		{
-			return IsChildOf(new Path(potentialBasePath));
+			return IsChildOf(new NPath(potentialBasePath));
 		}
 
-		public bool IsChildOf(Path potentialBasePath)
+		public bool IsChildOf(NPath potentialBasePath)
 		{
 			if ((IsRelative && !potentialBasePath.IsRelative) || !IsRelative && potentialBasePath.IsRelative)
 				throw new ArgumentException("You can only call IsChildOf with two relative paths, or with two absolute paths");
@@ -554,12 +552,12 @@ namespace NiceIO
 			return Parent().IsChildOf(potentialBasePath);
 		}
 
-		public Path ParentContaining(string needle)
+		public NPath ParentContaining(string needle)
 		{
-			return ParentContaining(new Path(needle));
+			return ParentContaining(new NPath(needle));
 		}
 
-		public Path ParentContaining(Path needle)
+		public NPath ParentContaining(NPath needle)
 		{
 			ThrowIfRelative();
 			var candidate = this;

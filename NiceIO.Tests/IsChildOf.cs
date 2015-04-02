@@ -24,31 +24,31 @@ namespace NiceIO.Tests
 		[Test]
 		public void UnrelatedPaths()
 		{
-			Assert.IsFalse(new Path("/a/b/c").IsChildOf("/unrelated"));
+			Assert.IsFalse(new NPath("/a/b/c").IsChildOf("/unrelated"));
 		}
 
 		[Test]
 		public void AbsoluteAndRelative()
 		{
-			Assert.Throws<ArgumentException>(() => new Path("/a/b/c").IsChildOf("the/relative"));
+			Assert.Throws<ArgumentException>(() => new NPath("/a/b/c").IsChildOf("the/relative"));
 		}
 
 		[Test]
 		public void RelativeAndAbsolute()
 		{
-			Assert.Throws<ArgumentException>(() => new Path("relative").IsChildOf("/a/b/c"));
+			Assert.Throws<ArgumentException>(() => new NPath("relative").IsChildOf("/a/b/c"));
 		}
 
 		[Test]
 		public void TwoRelative()
 		{
-			Assert.IsTrue(new Path("hello/there").IsChildOf(new Path("hello")));
+			Assert.IsTrue(new NPath("hello/there").IsChildOf(new NPath("hello")));
 		}
 
 		[Test]
 		public void TwoRelativeUnrelated()
 		{
-			Assert.IsFalse(new Path("hello/there").IsChildOf(new Path("boink")));
+			Assert.IsFalse(new NPath("hello/there").IsChildOf(new NPath("boink")));
 		}
 
 	}

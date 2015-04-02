@@ -8,8 +8,8 @@ namespace NiceIO.Tests
 		[Test]
 		public void SingleFile()
 		{
-			var path1 = new Path("myfile");
-			var path2 = new Path("myfile");
+			var path1 = new NPath("myfile");
+			var path2 = new NPath("myfile");
 			Assert.IsTrue(path1.Equals(path2));
 			Assert.IsTrue(path1 == path2);
 		}
@@ -17,8 +17,8 @@ namespace NiceIO.Tests
 		[Test]
 		public void InFolderButDifferentSlashes()
 		{
-			var path1 = new Path(@"mydir/myfile");
-			var path2 = new Path(@"mydir\myfile");
+			var path1 = new NPath(@"mydir/myfile");
+			var path2 = new NPath(@"mydir\myfile");
 			Assert.IsTrue(path1.Equals(path2));
 			Assert.IsTrue(path1 == path2);
 		}
@@ -26,8 +26,8 @@ namespace NiceIO.Tests
 		[Test]
 		public void WithDifferentDriveLetters()
 		{
-			var path1 = new Path(@"c:\mydir\myfile");
-			var path2 = new Path(@"e:\mydir\myfile");
+			var path1 = new NPath(@"c:\mydir\myfile");
+			var path2 = new NPath(@"e:\mydir\myfile");
 			Assert.IsFalse(path1.Equals(path2));
 			Assert.IsFalse(path1 == path2);
 		}
@@ -35,8 +35,8 @@ namespace NiceIO.Tests
 		[Test]
 		public void OneRootedOneNonRooted()
 		{
-			var path1 = new Path(@"\mydir\myfile");
-			var path2 = new Path(@"mydir\myfile");
+			var path1 = new NPath(@"\mydir\myfile");
+			var path2 = new NPath(@"mydir\myfile");
 			Assert.IsFalse(path1.Equals(path2));
 			Assert.IsFalse(path1 == path2);
 		}
@@ -44,8 +44,8 @@ namespace NiceIO.Tests
 		[Test]
 		public void OneWithTrailingSlash()
 		{
-			var path1 = new Path(@"mydir/mydir2");
-			var path2 = new Path(@"mydir/mydir2/");
+			var path1 = new NPath(@"mydir/mydir2");
+			var path2 = new NPath(@"mydir/mydir2/");
 			Assert.IsTrue(path1.Equals(path2));
 			Assert.IsTrue(path1 == path2);
 		}

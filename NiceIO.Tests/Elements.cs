@@ -8,7 +8,7 @@ namespace NiceIO.Tests
 		[Test]
 		public void Test()
 		{
-			CollectionAssert.AreEqual(new[] {"my", "path", "to", "somewhere.txt"}, new Path("/my/path/to/somewhere.txt").Elements);
+			CollectionAssert.AreEqual(new[] {"my", "path", "to", "somewhere.txt"}, new NPath("/my/path/to/somewhere.txt").Elements);
 		}
 	}
 }

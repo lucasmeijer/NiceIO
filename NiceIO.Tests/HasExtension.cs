@@ -12,37 +12,37 @@ namespace NiceIO.Tests
 		[Test]
 		public void WithDot()
 		{
-			Assert.IsTrue(new Path("myfile.txt").HasExtension(".txt"));
+			Assert.IsTrue(new NPath("myfile.txt").HasExtension(".txt"));
 		}
 		
 		[Test]
 		public void WithoutDot()
 		{
-			Assert.IsTrue(new Path("myfile.txt").HasExtension("txt"));
+			Assert.IsTrue(new NPath("myfile.txt").HasExtension("txt"));
 		}
 
 		[Test]
 		public void IsCaseInsensitive()
 		{
-			Assert.IsTrue(new Path("myfile.txt").HasExtension("TxT"));
+			Assert.IsTrue(new NPath("myfile.txt").HasExtension("TxT"));
 		}
 
 		[Test]
 		public void WithDotWrongExtension()
 		{
-			Assert.IsFalse(new Path("myfile.txt").HasExtension(".exe"));
+			Assert.IsFalse(new NPath("myfile.txt").HasExtension(".exe"));
 		}
 
 		[Test]
 		public void WithoutDotWrongExtension()
 		{
-			Assert.IsFalse(new Path("myfile.txt").HasExtension("exe"));
+			Assert.IsFalse(new NPath("myfile.txt").HasExtension("exe"));
 		}
 
 		[Test]
 		public void WithMultipleArguments_Params()
 		{
-			Assert.IsTrue(new Path("myfile.txt").HasExtension("exe","txt"));
+			Assert.IsTrue(new NPath("myfile.txt").HasExtension("exe","txt"));
 		}
 	}
 }

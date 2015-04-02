@@ -9,37 +9,37 @@ namespace NiceIO.Tests
 		[Test]
 		public void WithTrailingSlash()
 		{
-			Assert.AreEqual("mysubdir", new Path("mydir").Combine("mysubdir/").FileName);
+			Assert.AreEqual("mysubdir", new NPath("mydir").Combine("mysubdir/").FileName);
 		}
 
 		[Test]
 		public void WithRootedArgument()
 		{
-			Assert.Throws<ArgumentException>(() => new Path("/somedir").Combine(new Path("/other")));
+			Assert.Throws<ArgumentException>(() => new NPath("/somedir").Combine(new NPath("/other")));
 		}
 
 		[Test]
 		public void Simple()
 		{
-			Assert.AreEqual(new Path("/somedir/other/myfile"), new Path("/somedir").Combine(new Path("other/myfile")));
+			Assert.AreEqual(new NPath("/somedir/other/myfile"), new NPath("/somedir").Combine(new NPath("other/myfile")));
 		}
 
 		[Test]
 		public void WithRelativePathStartingWithDotDot()
 		{
-			Assert.AreEqual(new Path("/other/myfile"), new Path("/somedir/somedir2").Combine(new Path("../../other/myfile")));	
+			Assert.AreEqual(new NPath("/other/myfile"), new NPath("/somedir/somedir2").Combine(new NPath("../../other/myfile")));	
 		}
 
 		[Test]
 		public void CombiningDotDotOntoRelativePath()
 		{
-			Assert.AreEqual(new Path("../other/myfile"), new Path("somedir/somedir2").Combine(new Path("../../../other/myfile")));	
+			Assert.AreEqual(new NPath("../other/myfile"), new NPath("somedir/somedir2").Combine(new NPath("../../../other/myfile")));	
 		}
 
 		[Test]
 		public void WithMultipleArguments()
 		{
-			Assert.AreEqual(new Path("/a/b/c/d/e"), new Path("/a").Combine("b", "c/d", "e"));
+			Assert.AreEqual(new NPath("/a/b/c/d/e"), new NPath("/a").Combine("b", "c/d", "e"));
 		}
 	}
 }

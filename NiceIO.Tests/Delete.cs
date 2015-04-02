@@ -39,7 +39,7 @@ namespace NiceIO.Tests
 		[Test]
 		public void DeleteRelativePath()
 		{
-			var path = new Path("mydir/myfile.txt");
+			var path = new NPath("mydir/myfile.txt");
 			Assert.Throws<ArgumentException>(() => path.Delete());
 		}
 

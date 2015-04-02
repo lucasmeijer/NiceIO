@@ -54,14 +54,14 @@ namespace NiceIO.Tests
 		[Test]
 		public void WithRelativeSource()
 		{
-			Assert.Throws<ArgumentException>(() => new Path("somedir/somefile").Copy(new Path("irrelevant")));
+			Assert.Throws<ArgumentException>(() => new NPath("somedir/somefile").Copy(new NPath("irrelevant")));
 		}
 
 		[Test]
 		public void WithRelativeDestination()
 		{
 			PopulateTempDir(new[] {"myfile.txt"});
-			var result = _tempPath.Combine("myfile.txt").Copy(new Path("myfile2.txt"));
+			var result = _tempPath.Combine("myfile.txt").Copy(new NPath("myfile2.txt"));
 			Assert.AreEqual(_tempPath.Combine("myfile2.txt"),result);
 			AssertTempDir(new []
 				{

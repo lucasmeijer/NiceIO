@@ -8,19 +8,19 @@ namespace NiceIO.Tests
 		[Test]
 		public void Simple()
 		{
-			Assert.AreEqual(".txt", new Path("file.txt").ExtensionWithDot);
+			Assert.AreEqual(".txt", new NPath("file.txt").ExtensionWithDot);
 		}
 
 		[Test]
 		public void FileWithoutExtension()
 		{
-			Assert.AreEqual("", new Path("myfile").ExtensionWithDot);
+			Assert.AreEqual("", new NPath("myfile").ExtensionWithDot);
 		}
 
 		[Test]
 		public void FileWithMultipleDots()
 		{
-			Assert.AreEqual(".exe", new Path("myfile.something.something.exe").ExtensionWithDot);
+			Assert.AreEqual(".exe", new NPath("myfile.something.something.exe").ExtensionWithDot);
 		}
 	}
 }

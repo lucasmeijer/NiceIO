@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using Path=NiceIO.Path;
 
 namespace NiceIO.Tests
 {

@@ -12,14 +12,14 @@ namespace NiceIO.Tests
 		[Test]
 		public void CurrentDirectory()
 		{
-			Assert.IsTrue(Path.CurrentDirectory.DirectoryExists());
+			Assert.IsTrue(NPath.CurrentDirectory.DirectoryExists());
 		}
 
 		[Test]
 		public void HomeDirectory()
 		{
-			Console.WriteLine(Path.HomeDirectory);
-			Assert.IsTrue(Path.HomeDirectory.DirectoryExists());
+			Console.WriteLine(NPath.HomeDirectory);
+			Assert.IsTrue(NPath.HomeDirectory.DirectoryExists());
 		}
 	}
 }

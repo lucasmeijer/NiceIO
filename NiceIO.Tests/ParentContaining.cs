@@ -31,13 +31,13 @@ namespace NiceIO.Tests
 		{
 			PopulateTempDir(new[] { "somedir/", "somedir/dir2/", "somedir/dir2/myfile" ,"needledir/","needledir/needlefile"});
 
-			Assert.AreEqual(_tempPath, _tempPath.Combine("somedir/dir2/myfile").ParentContaining(new Path("needledir/needlefile")));
+			Assert.AreEqual(_tempPath, _tempPath.Combine("somedir/dir2/myfile").ParentContaining(new NPath("needledir/needlefile")));
 		}
 
 		[Test]
 		public void InRelativePath()
 		{
-			Assert.Throws<ArgumentException>(() => new Path("this/is/relative").ParentContaining("needle"));
+			Assert.Throws<ArgumentException>(() => new NPath("this/is/relative").ParentContaining("needle"));
 		}
 	}
 }
