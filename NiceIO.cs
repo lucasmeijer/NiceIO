@@ -67,13 +67,12 @@ namespace NiceIO
 			return path;
 		}
 
-		private static bool IsRelativeFromSplitString(IEnumerable<string> split)
+		private static bool IsRelativeFromSplitString(string[] split)
 		{
-			if (!split.Any())
-				return false;
+			if (split.Length < 2)
+				return true;
 
-			//did the string start with a slash? -> rooted
-			return split.First().Length != 0;
+			return split[0].Length != 0 || !split.Any(s => s.Length > 0);
 		}
 
 		private Path(string[] elements, bool isRelative, string driveLetter)
@@ -139,19 +138,34 @@ namespace NiceIO
 			get { return _elements; }
 		}
 
-		public bool Exists()
+		public bool Exists(string append="")
 		{
-			return FileExists() || DirectoryExists();
+			return Exists(new Path(append));
 		}
 
-		public bool DirectoryExists()
+		public bool Exists(Path append)
 		{
-			return Directory.Exists(ToString());
+			return FileExists(append) || DirectoryExists(append);
 		}
 
-		public bool FileExists()
+		public bool DirectoryExists(string append="")
 		{
-			return File.Exists(ToString());
+			return DirectoryExists(new Path(append));
+		}
+
+		public bool DirectoryExists(Path append)
+		{
+			return Directory.Exists(Combine(append).ToString());
+		}
+
+		public bool FileExists(string append="")
+		{
+			return FileExists(new Path(append));
+		}
+
+		public bool FileExists(Path append)
+		{
+			return File.Exists(Combine(append).ToString());
 		}
 
 		public string ExtensionWithDot

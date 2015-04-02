@@ -82,5 +82,11 @@ namespace NiceIO.Tests
 		{
 			Assert.Throws<ArgumentException>(() => new Path("/../../myotherdir/myfile.txt"));
 		}
+
+		[Test]
+		public void WithEmptyString()
+		{
+			Assert.AreEqual("",new Path("").ToString());
+		}
 	}
 }

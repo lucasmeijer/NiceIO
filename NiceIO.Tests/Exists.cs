@@ -12,6 +12,10 @@ namespace NiceIO.Tests
 			Assert.IsTrue(_tempPath.Combine("somefile").Exists());
 			Assert.IsTrue(_tempPath.Combine("somefile").FileExists());
 			Assert.IsFalse(_tempPath.Combine("somefile").DirectoryExists());
+
+			Assert.IsTrue(_tempPath.Exists("somefile"));
+			Assert.IsTrue(_tempPath.FileExists("somefile"));
+			Assert.IsFalse(_tempPath.DirectoryExists("somefile"));
 		}
 
 		[Test]
