@@ -49,6 +49,7 @@
     <Compile Include="CreateTempDirectory.cs" />
     <Compile Include="Delete.cs" />
     <Compile Include="Elements.cs" />
+    <Compile Include="EnsureDirectoryExists.cs" />
     <Compile Include="Equality.cs" />
     <Compile Include="Exists.cs" />
     <Compile Include="ContentsTests.cs" />

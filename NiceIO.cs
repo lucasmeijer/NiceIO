@@ -316,7 +316,7 @@ namespace NiceIO
 		public Path CreateFile()
 		{
 			ThrowIfRelative();
-			EnsureDirectoryExists(Parent());
+			EnsureParentDirectoryExists();
 			File.WriteAllBytes(ToString(), new byte[0]);
 			return this;
 		}
@@ -382,7 +382,7 @@ namespace NiceIO
 				if (!fileFilter(dest))
 					return null;
 
-				EnsureDirectoryExists(dest.Parent());
+				dest.EnsureParentDirectoryExists();
 
 				File.Copy(ToString(), dest.ToString(), true);
 				return dest;
@@ -390,7 +390,7 @@ namespace NiceIO
 			
 			if (DirectoryExists())
 			{
-				EnsureDirectoryExists(dest);
+				dest.EnsureDirectoryExists();
 				foreach (var thing in Contents())
 					thing.Copy(dest.Combine(thing.RelativeTo(this)),fileFilter);
 				return dest;
@@ -446,7 +446,7 @@ namespace NiceIO
 
 			if (FileExists())
 			{
-				EnsureDirectoryExists(dest.Parent());
+				dest.EnsureParentDirectoryExists();
 				File.Move(ToString(), dest.ToString());
 				return dest;
 			}
@@ -490,12 +490,23 @@ namespace NiceIO
 				throw new ArgumentException("You are attempting an operation on a Path that requires an absolute path, but the path is relative");
 		}
 
-		private void EnsureDirectoryExists(Path directory)
+		public void EnsureDirectoryExists(string append = "")
 		{
-			if (directory.DirectoryExists())
+			EnsureDirectoryExists(new Path(append));
+		}
+
+		public void EnsureDirectoryExists(Path append)
+		{
+			var combined = Combine(append);
+			if (combined.DirectoryExists())
 				return;
-			EnsureDirectoryExists(directory.Parent());
-			directory.CreateDirectory();
+			combined.EnsureParentDirectoryExists();
+			combined.CreateDirectory();
+		}
+
+		public void EnsureParentDirectoryExists()
+		{
+			Parent().EnsureDirectoryExists();
 		}
 
 		public bool IsChildOf(string potentialBasePath)
