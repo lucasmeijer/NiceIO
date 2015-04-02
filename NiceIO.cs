@@ -296,22 +296,37 @@ namespace NiceIO
 
 #region directory enumeration
 
+		public IEnumerable<Path> Files(string filter, bool recurse=false)
+		{
+			return Directory.GetFiles(ToString(),filter, recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).Select(s => new Path(s));
+		}
+
 		public IEnumerable<Path> Files(bool recurse = false)
 		{
-			return Directory.GetFiles(ToString(), "*", recurse ? SearchOption.AllDirectories :  SearchOption.TopDirectoryOnly).Select(s => new Path(s));
+			return Files("*", recurse);
+		}
+
+		public IEnumerable<Path> Contents(string filter, bool recurse = false)
+		{
+			return Files(filter,recurse).Concat(Directories(filter,recurse));
 		}
 
 		public IEnumerable<Path> Contents(bool recurse = false)
 		{
-			return Files(recurse).Concat(Directories(recurse));
+			return Contents("*", recurse);
+		}
+
+		public IEnumerable<Path> Directories(string filter, bool recurse = false)
+		{
+			return Directory.GetDirectories(ToString(), filter, recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).Select(s => new Path(s));
 		}
 
 		public IEnumerable<Path> Directories(bool recurse = false)
 		{
-			return Directory.GetDirectories(ToString(), "*", recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).Select(s => new Path(s));
+			return Directories("*", recurse);
 		}
 
-#endregion
+		#endregion
 
 #region filesystem writing operations
 		public Path CreateFile()
