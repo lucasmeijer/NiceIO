@@ -60,7 +60,7 @@ myfile.Copy("hello/myfile3");
 // /Users/lucas/mysubdir/hello/myfile3
 
 //listing files
-dir.Files(SearchOption.AllDirectories);
+dir.Files(recurse:true);
 // { /Users/lucas/mysubdir/myfile.txt, 
 //   /Users/lucas/mysubdir/myfile2, 
 //   /Users/lucas/mysubdir/hello/myfile3 }
@@ -70,14 +70,14 @@ dir.Directories();
 // { /Users/lucas/mysubdir/hello }
 
 //or both
-dir.Contents(SearchOption.AllDirectories);
+dir.Contents(recurse:true);
 // { /Users/lucas/mysubdir/myfile.txt, 
 //   /Users/lucas/mysubdir/myfile2, 
 //   /Users/lucas/mysubdir/hello/myfile3, 
 //   /Users/lucas/mysubdir/hello }
 
 //copy entire directory, and listing everything in the copy
-myfile.Parent().Copy("anotherdir").Files(SearchOption.AllDirectories);
+myfile.Parent().Copy("anotherdir").Files(recurse:true);
 // { /Users/lucas/anotherdir/myfile, 
 //   /Users/lucas/anotherdir/myfile.txt, 
 //   /Users/lucas/anotherdir/myfile2, 
