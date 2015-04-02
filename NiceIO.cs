@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace NiceIO
@@ -570,6 +571,35 @@ namespace NiceIO
 				if (candidate.IsEmpty())
 					return null;
 			}
+		}
+	}
+
+	public static class Extensions
+	{
+		public static IEnumerable<NPath> Copy(this IEnumerable<NPath> self, string dest)
+		{
+			return Copy(self, new NPath(dest));
+		}
+
+		public static IEnumerable<NPath> Copy(this IEnumerable<NPath> self, NPath dest)
+		{
+			if (dest.IsRelative)
+				throw new ArgumentException("When copying multiple files, the destination cannot be a relative path");
+			dest.EnsureDirectoryExists();
+			return self.Select(p => p.Copy(dest.Combine(p.FileName))).ToArray();
+		}
+
+		public static IEnumerable<NPath> Move(this IEnumerable<NPath> self, string dest)
+		{
+			return Move(self, new NPath(dest));
+		}
+
+		public static IEnumerable<NPath> Move(this IEnumerable<NPath> self, NPath dest)
+		{
+			if (dest.IsRelative)
+				throw new ArgumentException("When moving multiple files, the destination cannot be a relative path");
+			dest.EnsureDirectoryExists();
+			return self.Select(p => p.Move(dest.Combine(p.FileName))).ToArray();
 		}
 	}
 

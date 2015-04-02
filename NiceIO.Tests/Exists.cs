@@ -26,5 +26,13 @@ namespace NiceIO.Tests
 			Assert.IsFalse(_tempPath.Combine("somefile").FileExists());
 			Assert.IsTrue(_tempPath.Combine("somefile").DirectoryExists());
 		}
+
+		[Test]
+		public void FileWithSpace()
+		{
+			PopulateTempDir(new[] {"some file"});
+			Assert.IsTrue(_tempPath.Combine("some file").FileExists());
+			AssertTempDir(new [] {"some file"});
+		}
 	}
 }

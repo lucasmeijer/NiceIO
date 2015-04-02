@@ -45,6 +45,7 @@
     <Compile Include="Construction.cs" />
     <Compile Include="CopyDirectory.cs" />
     <Compile Include="CopyFile.cs" />
+    <Compile Include="CopyAndMoveFiles.cs" />
     <Compile Include="Create.cs" />
     <Compile Include="CreateTempDirectory.cs" />
     <Compile Include="Delete.cs" />
