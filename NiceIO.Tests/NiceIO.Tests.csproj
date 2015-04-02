@@ -56,6 +56,7 @@
     <Compile Include="HasExtension.cs" />
     <Compile Include="MoveDirectory.cs" />
     <Compile Include="MoveFile.cs" />
+    <Compile Include="ParentContaining.cs" />
     <Compile Include="RelativeTo.cs" />
     <Compile Include="SpecialPaths.cs" />
     <Compile Include="TempDir.cs" />

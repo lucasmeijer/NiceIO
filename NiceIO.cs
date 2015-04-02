@@ -508,6 +508,26 @@ namespace NiceIO
 
 			return Parent().IsBelowOrEqual(potentialBasePath);
 		}
+
+		public Path ParentContaining(string needle)
+		{
+			return ParentContaining(new Path(needle));
+		}
+
+		public Path ParentContaining(Path needle)
+		{
+			ThrowIfRelative();
+			var candidate = this;
+			while (true)
+			{
+				if (candidate.Exists(needle))
+					return candidate;
+
+				candidate = candidate.Parent();
+				if (candidate.IsEmpty())
+					return null;
+			}
+		}
 	}
 
 	public enum SlashMode
