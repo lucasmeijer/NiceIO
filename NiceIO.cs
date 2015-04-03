@@ -572,6 +572,32 @@ namespace NiceIO
 					return null;
 			}
 		}
+
+		public NPath WriteAllText(string contents)
+		{
+			ThrowIfRelative();
+			File.WriteAllText(ToString(), contents);
+			return this;
+		}
+
+		public string ReadAllText()
+		{
+			ThrowIfRelative();
+			return File.ReadAllText(ToString());
+		}
+
+		public NPath WriteAllLines(string[] contents)
+		{
+			ThrowIfRelative();
+			File.WriteAllLines(ToString(), contents);
+			return this;
+		}
+
+		public string[] ReadAllLines()
+		{
+			ThrowIfRelative();
+			return File.ReadAllLines(ToString());
+		}
 	}
 
 	public static class Extensions
