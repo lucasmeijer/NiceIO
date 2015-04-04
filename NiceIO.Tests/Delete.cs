@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using NUnit.Framework;
 
@@ -56,6 +57,21 @@ namespace NiceIO.Tests
 				directory.Delete(DeleteMode.Soft);
 			}
 			Assert.IsFalse(directory.Combine("myfile").FileExists());
+		}
+
+
+		[Test]
+		public void DeleteOnMultiplePaths()
+		{
+			PopulateTempDir(new[] { "somefile","somedir/","somedir/myfile","somefile2" });
+
+			var twoPaths = new[] {_tempPath.Combine("somefile"), _tempPath.Combine("somedir")};
+
+			var result = twoPaths.Delete();
+
+			CollectionAssert.AreEqual(twoPaths, result);
+
+			AssertTempDir(new [] {"somefile2"});
 		}
 	}
 }

@@ -638,6 +638,13 @@ namespace NiceIO
 			dest.EnsureDirectoryExists();
 			return self.Select(p => p.Move(dest.Combine(p.FileName))).ToArray();
 		}
+
+		public static IEnumerable<NPath> Delete(this IEnumerable<NPath> self)
+		{
+			foreach(var p in self)
+				p.Delete();
+			return self;
+		}
 	}
 
 	public enum SlashMode
