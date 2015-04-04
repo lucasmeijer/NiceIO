@@ -507,6 +507,14 @@ namespace NiceIO
 			}
 		}
 
+		public static NPath SystemTemp
+		{
+			get
+			{
+				return new NPath(Path.GetTempPath());
+			}
+		}
+
 		#endregion
 
 		private void ThrowIfRelative()
