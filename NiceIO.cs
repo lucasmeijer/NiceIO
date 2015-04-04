@@ -656,6 +656,11 @@ namespace NiceIO
 				p.Delete();
 			return self;
 		}
+
+		public static IEnumerable<string> InQuotes(this IEnumerable<NPath> self, SlashMode forward = SlashMode.Native)
+		{
+			return self.Select(p => p.InQuotes(forward));
+		}
 	}
 
 	public enum SlashMode

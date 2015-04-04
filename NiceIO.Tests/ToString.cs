@@ -33,5 +33,11 @@ namespace NiceIO.Tests
 		{
 			Assert.AreEqual(@"""a\b""", new NPath(@"a/b").InQuotes(SlashMode.Backward));
 		}
+
+		[Test]
+		public void InQuotesOnMultiplePaths()
+		{
+			CollectionAssert.AreEqual(new[] { @"""a/b""", @"""c/d""" }, new[] { new NPath("a/b"), new NPath("c/d"), }.InQuotes(SlashMode.Forward));	
+		}
 	}
 }
