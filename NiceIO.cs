@@ -276,7 +276,8 @@ namespace NiceIO
 				// Suitable nullity checks etc, of course :)
 				hash = hash * 23 + _isRelative.GetHashCode();
 				hash = hash * 23 + _elements.GetHashCode();
-				hash = hash * 23 + _driveLetter.GetHashCode();
+				if (_driveLetter != null)
+					hash = hash * 23 + _driveLetter.GetHashCode();
 				return hash;
 			}
 		}
