@@ -12,7 +12,8 @@ namespace NiceIO.Tests
 		[Test]
 		public void CreatesDirectory()
 		{
-			_tempPath.Combine("subdir").EnsureDirectoryExists();
+			var subdir = _tempPath.Combine("subdir");
+			Assert.AreEqual(subdir, subdir.EnsureDirectoryExists());
 
 			AssertTempDir(new[] { "subdir/"});
 		}
@@ -21,7 +22,8 @@ namespace NiceIO.Tests
 		public void ExistingDirectory()
 		{
 			PopulateTempDir(new[ ]{ "subdir/"});
-			_tempPath.Combine("subdir").EnsureDirectoryExists();
+			var subdir = _tempPath.Combine("subdir");
+			Assert.AreEqual(subdir,subdir.EnsureDirectoryExists());
 			AssertTempDir(new[] { "subdir/" });
 		}
 
@@ -36,7 +38,7 @@ namespace NiceIO.Tests
 		[Test]
 		public void EnsureParentDirectoryExists()
 		{
-			_tempPath.Combine("subdir1/subdir2/myfile").EnsureParentDirectoryExists();
+			Assert.AreEqual(_tempPath.Combine("subdir1/subdir2"),_tempPath.Combine("subdir1/subdir2/myfile").EnsureParentDirectoryExists());
 
 			AssertTempDir(new[] { "subdir1/","subdir1/subdir2/" });
 		}

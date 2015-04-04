@@ -515,23 +515,26 @@ namespace NiceIO
 				throw new ArgumentException("You are attempting an operation on a Path that requires an absolute path, but the path is relative");
 		}
 
-		public void EnsureDirectoryExists(string append = "")
+		public NPath EnsureDirectoryExists(string append = "")
 		{
-			EnsureDirectoryExists(new NPath(append));
+			return EnsureDirectoryExists(new NPath(append));
 		}
 
-		public void EnsureDirectoryExists(NPath append)
+		public NPath EnsureDirectoryExists(NPath append)
 		{
 			var combined = Combine(append);
 			if (combined.DirectoryExists())
-				return;
+				return combined;
 			combined.EnsureParentDirectoryExists();
 			combined.CreateDirectory();
+			return combined;
 		}
 
-		public void EnsureParentDirectoryExists()
+		public NPath EnsureParentDirectoryExists()
 		{
-			Parent().EnsureDirectoryExists();
+			var parent = Parent();
+			parent.EnsureDirectoryExists();
+			return parent;
 		}
 
 		public bool IsChildOf(string potentialBasePath)
