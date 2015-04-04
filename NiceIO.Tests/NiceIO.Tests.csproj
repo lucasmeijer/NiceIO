@@ -43,6 +43,7 @@
     <Compile Include="ChangeExtension.cs" />
     <Compile Include="Combine.cs" />
     <Compile Include="Construction.cs" />
+    <Compile Include="CopyFiles.cs" />
     <Compile Include="CopyDirectory.cs" />
     <Compile Include="CopyFile.cs" />
     <Compile Include="CopyAndMoveFiles.cs" />

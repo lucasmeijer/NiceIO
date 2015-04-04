@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
@@ -31,18 +32,19 @@ namespace NiceIO.Tests
 			}
 		}
 
-		protected void AssertTempDir(string[] entries)
+		protected void AssertTempDir(IEnumerable<string> entries)
 		{
-			entries = entries.OrderBy(s => s).ToArray();
-			var expectedPaths = entries.Select(s => _tempPath.Combine(s).RelativeTo(_tempPath));
+			var entriesArray = entries.ToArray();
+			entriesArray = entriesArray.OrderBy(s => s).ToArray();
+			var expectedPaths = entriesArray.Select(s => _tempPath.Combine(s).RelativeTo(_tempPath));
 
 			var actualPaths = _tempPath.Contents(recurse: true).OrderBy(s => s.ToString()).ToArray();
 
 			CollectionAssert.AreEquivalent(expectedPaths, actualPaths.Select(p => p.RelativeTo(_tempPath)));
 
-			for (var i = 0; i != entries.Length; i++)
+			for (var i = 0; i != entriesArray.Length; i++)
 			{
-				if (!entries[i].EndsWith("/"))
+				if (!entriesArray[i].EndsWith("/"))
 					continue;
 
 				Assert.IsTrue(actualPaths[i].DirectoryExists(), actualPaths[i] + " was expected to be a directory");

@@ -598,6 +598,17 @@ namespace NiceIO
 			ThrowIfRelative();
 			return File.ReadAllLines(ToString());
 		}
+
+		public IEnumerable<NPath> CopyFiles(NPath destination, bool recurse, Func<NPath,bool> fileFilter = null)
+		{
+			destination.EnsureDirectoryExists();
+			return Files(recurse).Where(fileFilter ?? AlwaysTrue).Select(file => file.Copy(destination.Combine(file.RelativeTo(this)))).ToArray();
+		}
+
+		static bool AlwaysTrue(NPath p)
+		{
+			return true;
+		}
 	}
 
 	public static class Extensions
