@@ -9,13 +9,13 @@ namespace NiceIO.Tests
 		[Test]
 		public void WriteAllText()
 		{
-			Assert.AreEqual("hello there", _tempPath.Combine("myfile").WriteAllText("hello there").ReadAllText());
+			Assert.AreEqual("hello there", _tempPath.Combine("mydir/myfile").WriteAllText("hello there").ReadAllText());
 		}
 
 		[Test]
 		public void WriteAllLines()
 		{
-			CollectionAssert.AreEqual(new[] {"hello", "there"}, _tempPath.Combine("myfile").WriteAllLines(new[] {"hello", "there"}).ReadAllLines());
+			CollectionAssert.AreEqual(new[] {"hello", "there"}, _tempPath.Combine("mydir/myfile").WriteAllLines(new[] {"hello", "there"}).ReadAllLines());
 		}
 
 		[Test]

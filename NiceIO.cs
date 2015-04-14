@@ -588,6 +588,7 @@ namespace NiceIO
 		public NPath WriteAllText(string contents)
 		{
 			ThrowIfRelative();
+			EnsureParentDirectoryExists();
 			File.WriteAllText(ToString(), contents);
 			return this;
 		}
@@ -601,6 +602,7 @@ namespace NiceIO
 		public NPath WriteAllLines(string[] contents)
 		{
 			ThrowIfRelative();
+			EnsureParentDirectoryExists();
 			File.WriteAllLines(ToString(), contents);
 			return this;
 		}
