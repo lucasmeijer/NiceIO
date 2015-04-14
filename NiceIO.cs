@@ -13,11 +13,11 @@ namespace NiceIO
 		private readonly bool _isRelative;
 		private readonly string _driveLetter;
 
-#region construction
-		
+		#region construction
+
 		public NPath(string path)
 		{
-			if (path==null)
+			if (path == null)
 				throw new ArgumentNullException();
 
 			path = ParseDriveLetter(path, out _driveLetter);
@@ -52,7 +52,7 @@ namespace NiceIO
 
 		private static bool HasNonDotDotLastElement(List<string> stack)
 		{
-			return stack.Count > 0 && stack[stack.Count-1] != "..";
+			return stack.Count > 0 && stack[stack.Count - 1] != "..";
 		}
 
 		private string ParseDriveLetter(string path, out string driveLetter)
@@ -62,7 +62,7 @@ namespace NiceIO
 				driveLetter = path[0].ToString();
 				return path.Substring(2);
 			}
-			
+
 			driveLetter = null;
 			return path;
 		}
@@ -84,15 +84,15 @@ namespace NiceIO
 
 		public NPath Combine(params string[] append)
 		{
-			return Combine(append.Select(a=>new NPath(a)).ToArray());
+			return Combine(append.Select(a => new NPath(a)).ToArray());
 		}
 
 		public NPath Combine(params NPath[] append)
 		{
-			if (!append.All(p=>p.IsRelative))
+			if (!append.All(p => p.IsRelative))
 				throw new ArgumentException("You cannot .Combine a non-relative path");
 
-			return new NPath(ParseSplitStringIntoElements(_elements.Concat(append.SelectMany(p=>p._elements))), _isRelative, _driveLetter);
+			return new NPath(ParseSplitStringIntoElements(_elements.Concat(append.SelectMany(p => p._elements))), _isRelative, _driveLetter);
 		}
 
 		public NPath Parent()
@@ -119,9 +119,9 @@ namespace NiceIO
 			newElements[newElements.Length - 1] = Path.ChangeExtension(_elements[_elements.Length - 1], WithDot(extension));
 			return new NPath(newElements, _isRelative, _driveLetter);
 		}
-#endregion construction
+		#endregion construction
 
-#region inspection
+		#region inspection
 
 		public bool IsRelative
 		{
@@ -138,7 +138,7 @@ namespace NiceIO
 			get { return _elements; }
 		}
 
-		public bool Exists(string append="")
+		public bool Exists(string append = "")
 		{
 			return Exists(new NPath(append));
 		}
@@ -148,7 +148,7 @@ namespace NiceIO
 			return FileExists(append) || DirectoryExists(append);
 		}
 
-		public bool DirectoryExists(string append="")
+		public bool DirectoryExists(string append = "")
 		{
 			return DirectoryExists(new NPath(append));
 		}
@@ -158,7 +158,7 @@ namespace NiceIO
 			return Directory.Exists(Combine(append).ToString());
 		}
 
-		public bool FileExists(string append="")
+		public bool FileExists(string append = "")
 		{
 			return FileExists(new NPath(append));
 		}
@@ -194,7 +194,7 @@ namespace NiceIO
 			return ToString(SlashMode.Native);
 		}
 
-		public  string ToString(SlashMode slashMode)
+		public string ToString(SlashMode slashMode)
 		{
 			var sb = new StringBuilder();
 			if (_driveLetter != null)
@@ -302,13 +302,13 @@ namespace NiceIO
 		{
 			return _elements.Length == 0;
 		}
-#endregion inspection	
+		#endregion inspection
 
-#region directory enumeration
+		#region directory enumeration
 
-		public IEnumerable<NPath> Files(string filter, bool recurse=false)
+		public IEnumerable<NPath> Files(string filter, bool recurse = false)
 		{
-			return Directory.GetFiles(ToString(),filter, recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).Select(s => new NPath(s));
+			return Directory.GetFiles(ToString(), filter, recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).Select(s => new NPath(s));
 		}
 
 		public IEnumerable<NPath> Files(bool recurse = false)
@@ -318,7 +318,7 @@ namespace NiceIO
 
 		public IEnumerable<NPath> Contents(string filter, bool recurse = false)
 		{
-			return Files(filter,recurse).Concat(Directories(filter,recurse));
+			return Files(filter, recurse).Concat(Directories(filter, recurse));
 		}
 
 		public IEnumerable<NPath> Contents(bool recurse = false)
@@ -338,7 +338,7 @@ namespace NiceIO
 
 		#endregion
 
-#region filesystem writing operations
+		#region filesystem writing operations
 		public NPath CreateFile()
 		{
 			ThrowIfRelative();
@@ -384,14 +384,14 @@ namespace NiceIO
 			return Copy(new NPath(dest));
 		}
 
-		public NPath Copy(string dest, Func<NPath,bool> fileFilter )
+		public NPath Copy(string dest, Func<NPath, bool> fileFilter)
 		{
 			return Copy(new NPath(dest), fileFilter);
 		}
 
 		public NPath Copy(NPath dest)
 		{
-			return Copy(dest,p => true);
+			return Copy(dest, p => true);
 		}
 
 		public NPath Copy(NPath dest, Func<NPath, bool> fileFilter)
@@ -413,15 +413,15 @@ namespace NiceIO
 				File.Copy(ToString(), dest.ToString(), true);
 				return dest;
 			}
-			
+
 			if (DirectoryExists())
 			{
 				dest.EnsureDirectoryExists();
 				foreach (var thing in Contents())
-					thing.Copy(dest.Combine(thing.RelativeTo(this)),fileFilter);
+					thing.Copy(dest.Combine(thing.RelativeTo(this)), fileFilter);
 				return dest;
 			}
-			
+
 			throw new ArgumentException("Copy() called on path that doesnt exist: " + ToString());
 		}
 
@@ -483,7 +483,7 @@ namespace NiceIO
 				return dest;
 			}
 
-			throw new ArgumentException("Move() called on a path that doesn't exist: "+ToString());
+			throw new ArgumentException("Move() called on a path that doesn't exist: " + ToString());
 		}
 
 		#endregion
@@ -502,9 +502,9 @@ namespace NiceIO
 		{
 			get
 			{
-				if (Path.DirectorySeparatorChar=='\\')
+				if (Path.DirectorySeparatorChar == '\\')
 					return new NPath(Environment.GetEnvironmentVariable("USERPROFILE"));
-				return new NPath (Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+				return new NPath(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
 			}
 		}
 
@@ -579,9 +579,9 @@ namespace NiceIO
 				if (candidate.Exists(needle))
 					return candidate;
 
-				candidate = candidate.Parent();
 				if (candidate.IsEmpty())
 					return null;
+				candidate = candidate.Parent();
 			}
 		}
 
@@ -613,7 +613,7 @@ namespace NiceIO
 			return File.ReadAllLines(ToString());
 		}
 
-		public IEnumerable<NPath> CopyFiles(NPath destination, bool recurse, Func<NPath,bool> fileFilter = null)
+		public IEnumerable<NPath> CopyFiles(NPath destination, bool recurse, Func<NPath, bool> fileFilter = null)
 		{
 			destination.EnsureDirectoryExists();
 			return Files(recurse).Where(fileFilter ?? AlwaysTrue).Select(file => file.Copy(destination.Combine(file.RelativeTo(this)))).ToArray();
@@ -655,7 +655,7 @@ namespace NiceIO
 
 		public static IEnumerable<NPath> Delete(this IEnumerable<NPath> self)
 		{
-			foreach(var p in self)
+			foreach (var p in self)
 				p.Delete();
 			return self;
 		}
