@@ -9,28 +9,28 @@ namespace NiceIO.Tests
 		[Test]
 		public void ParentFromFileInDirectory()
 		{
-			var path = new NPath("mydir/myotherdir/myfile.exe").Parent();
+			var path = new NPath("mydir/myotherdir/myfile.exe").Parent;
 			Assert.AreEqual("mydir/myotherdir", path.ToString(SlashMode.Forward));
 		}
 
 		[Test]
 		public void ParentFromFile()
 		{
-			var path = new NPath("myfile.exe").Parent();
+			var path = new NPath("myfile.exe").Parent;
 			Assert.AreEqual("", path.ToString());
 		}
 
 		[Test]
 		public void ParentFromFileInRoot()
 		{
-			var path = new NPath("/myfile.exe").Parent();
+			var path = new NPath("/myfile.exe").Parent;
 			Assert.AreEqual("/", path.ToString(SlashMode.Forward));
 		}
 
 		[Test]
 		public void ParentFromEmpty()
 		{
-			Assert.Throws<InvalidOperationException>(() => new NPath("/").Parent());
+			Assert.Throws<InvalidOperationException>(() => { var p = new NPath ("/").Parent; });
 		}
 	}
 }

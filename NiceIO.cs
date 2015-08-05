@@ -95,14 +95,17 @@ namespace NiceIO
 			return new NPath(ParseSplitStringIntoElements(_elements.Concat(append.SelectMany(p => p._elements))), _isRelative, _driveLetter);
 		}
 
-		public NPath Parent()
+		public NPath Parent
 		{
-			if (_elements.Length == 0)
-				throw new InvalidOperationException("Parent() is called on an empty path");
+			get
+			{
+				if (_elements.Length == 0)
+					throw new InvalidOperationException ("Parent is called on an empty path");
 
-			var newElements = _elements.Take(_elements.Length - 1).ToArray();
+				var newElements = _elements.Take (_elements.Length - 1).ToArray ();
 
-			return new NPath(newElements, _isRelative, _driveLetter);
+				return new NPath (newElements, _isRelative, _driveLetter);
+			}
 		}
 
 		public NPath RelativeTo(NPath path)
@@ -398,7 +401,7 @@ namespace NiceIO
 		{
 			ThrowIfRelative();
 			if (dest.IsRelative)
-				dest = Parent().Combine(dest);
+				dest = Parent.Combine(dest);
 
 			if (dest.DirectoryExists())
 				return Copy(dest.Combine(FileName), fileFilter);
@@ -465,7 +468,7 @@ namespace NiceIO
 		{
 			ThrowIfRelative();
 			if (dest.IsRelative)
-				return Move(Parent().Combine(dest));
+				return Move(Parent.Combine(dest));
 
 			if (dest.DirectoryExists())
 				return Move(dest.Combine(FileName));
@@ -541,7 +544,7 @@ namespace NiceIO
 
 		public NPath EnsureParentDirectoryExists()
 		{
-			var parent = Parent();
+			var parent = Parent;
 			parent.EnsureDirectoryExists();
 			return parent;
 		}
@@ -562,7 +565,7 @@ namespace NiceIO
 			if (Equals(potentialBasePath))
 				return true;
 
-			return Parent().IsChildOf(potentialBasePath);
+			return Parent.IsChildOf(potentialBasePath);
 		}
 
 		public NPath ParentContaining(string needle)
@@ -581,7 +584,7 @@ namespace NiceIO
 
 				if (candidate.IsEmpty())
 					return null;
-				candidate = candidate.Parent();
+				candidate = candidate.Parent;
 			}
 		}
 
