@@ -136,6 +136,11 @@ namespace NiceIO
 			get { return _elements.Last(); }
 		}
 
+		public string FileNameWithoutExtension
+		{
+			get { return Path.GetFileNameWithoutExtension (FileName); }
+		}
+
 		public IEnumerable<string> Elements
 		{
 			get { return _elements; }
