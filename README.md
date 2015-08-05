@@ -48,7 +48,7 @@ myfile.ExtensionWithDot;
 // ".txt"
 
 //getting parent directory
-NPath dir = myfile.Parent();
+NPath dir = myfile.Parent;
 // /User/lucas/mysubdir
 
 //copying files,
@@ -77,11 +77,17 @@ dir.Contents(recurse:true);
 //   /Users/lucas/mysubdir/hello }
 
 //copy entire directory, and listing everything in the copy
-myfile.Parent().Copy("anotherdir").Files(recurse:true);
+myfile.Parent.Copy("anotherdir").Files(recurse:true);
 // { /Users/lucas/anotherdir/myfile, 
 //   /Users/lucas/anotherdir/myfile.txt, 
 //   /Users/lucas/anotherdir/myfile2, 
 //   /Users/lucas/anotherdir/hello/myfile3 }
+
+//easy accesors for common operations:
+string text = myfile.ReadAllText();
+string[] lines = myfile.ReadAllLines();
+myFile.WriteAllText("hello");
+myFile.WriteAllLines(new[] { "one", "two"});
 ```
 
 NiceIO is MIT Licensed.
