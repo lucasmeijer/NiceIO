@@ -9,7 +9,9 @@ namespace NiceIO
 {
 	public class NPath
 	{
-		private readonly string[] _elements;
+        private static readonly StringComparison PathStringComparison = IsLinux() ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
+
+	    private readonly string[] _elements;
 		private readonly bool _isRelative;
 		private readonly string _driveLetter;
 
@@ -249,14 +251,15 @@ namespace NiceIO
 
 			if (p._isRelative != _isRelative)
 				return false;
-			if (p._driveLetter != _driveLetter)
-				return false;
+
+		    if (!string.Equals(p._driveLetter, _driveLetter, PathStringComparison))
+		        return false;
 
 			if (p._elements.Length != _elements.Length)
 				return false;
 
 			for (var i = 0; i != _elements.Length; i++)
-				if (p._elements[i] != _elements[i])
+                if (!string.Equals(p._elements[i], _elements[i], PathStringComparison))
 					return false;
 
 			return true;
@@ -639,7 +642,12 @@ namespace NiceIO
 		{
 			return true;
 		}
-	}
+
+        private static bool IsLinux()
+        {
+            return Directory.Exists("/proc");
+        }
+    }
 
 	public static class Extensions
 	{
