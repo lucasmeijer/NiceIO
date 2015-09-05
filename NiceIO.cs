@@ -409,25 +409,33 @@ namespace NiceIO
 				dest = Parent.Combine(dest);
 
 			if (dest.DirectoryExists())
-				return Copy(dest.Combine(FileName), fileFilter);
+				return CopyWithDeterminedDestination(dest.Combine(FileName), fileFilter);
 
+			return CopyWithDeterminedDestination (dest, fileFilter);
+		}
+
+		NPath CopyWithDeterminedDestination(NPath absoluteDestination, Func<NPath,bool> fileFilter)
+		{
+			if (absoluteDestination.IsRelative)
+				throw new ArgumentException ("absoluteDestination must be absolute");
+			
 			if (FileExists())
 			{
-				if (!fileFilter(dest))
+				if (!fileFilter(absoluteDestination))
 					return null;
 
-				dest.EnsureParentDirectoryExists();
+				absoluteDestination.EnsureParentDirectoryExists();
 
-				File.Copy(ToString(), dest.ToString(), true);
-				return dest;
+				File.Copy(ToString(), absoluteDestination.ToString(), true);
+				return absoluteDestination;
 			}
 
 			if (DirectoryExists())
 			{
-				dest.EnsureDirectoryExists();
+				absoluteDestination.EnsureDirectoryExists();
 				foreach (var thing in Contents())
-					thing.Copy(dest.Combine(thing.RelativeTo(this)), fileFilter);
-				return dest;
+					thing.CopyWithDeterminedDestination(absoluteDestination.Combine(thing.RelativeTo(this)), fileFilter);
+				return absoluteDestination;
 			}
 
 			throw new ArgumentException("Copy() called on path that doesnt exist: " + ToString());

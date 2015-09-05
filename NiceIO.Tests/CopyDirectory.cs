@@ -65,9 +65,11 @@ namespace NiceIO.Tests
 				"somedir/myfile", 
 				"targetdir/",
 				"targetdir/pre_existing_file",
+				"targetdir/somedir/",
 			});
 
-			_tempPath.Combine("somedir").Copy(_tempPath.Combine("targetdir"));
+			var returnValue = _tempPath.Combine("somedir").Copy(_tempPath.Combine("targetdir"));
+			Assert.AreEqual (_tempPath.Combine ("targetdir/somedir"), returnValue);
 
 			AssertTempDir(new[]
 			{
