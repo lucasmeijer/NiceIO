@@ -43,5 +43,11 @@ namespace NiceIO.Tests
 		{
 			Assert.Throws<ArgumentException>(() => new NPath("/mydir1/mydir2/myfile").RelativeTo(new NPath("/unrelated")));
 		}
+
+		[Test]
+		public void RootOfDrive()
+		{
+			Assert.IsFalse(new NPath("D:\\").IsRelative);
+		}
 	}
 }

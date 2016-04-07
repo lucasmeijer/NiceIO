@@ -25,7 +25,7 @@ namespace NiceIO
 
 			var split = path.Split('/', '\\');
 
-			_isRelative = IsRelativeFromSplitString(split);
+			_isRelative = _driveLetter == null && IsRelativeFromSplitString(split);
 
 			_elements = ParseSplitStringIntoElements(split.Where(s => s.Length > 0).ToArray());
 		}
