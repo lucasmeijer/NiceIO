@@ -17,7 +17,7 @@ namespace NiceIO.Tests
 		public void ParentFromFile()
 		{
 			var path = new NPath("myfile.exe").Parent;
-			Assert.AreEqual("", path.ToString());
+			Assert.AreEqual(".", path.ToString());
 		}
 
 		[Test]

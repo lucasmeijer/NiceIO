@@ -205,6 +205,9 @@ namespace NiceIO
 
 		public string ToString(SlashMode slashMode)
 		{
+			if (_isRelative && _elements.Length == 0)
+				return ".";
+
 			var sb = new StringBuilder();
 			if (_driveLetter != null)
 			{
