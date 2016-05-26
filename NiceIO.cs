@@ -464,6 +464,28 @@ namespace NiceIO
 				throw new InvalidOperationException("Trying to delete a path that does not exist: " + ToString());
 		}
 
+		public NPath MakeDirectoryEmpty()
+		{
+			ThrowIfRelative();
+			if (FileExists())
+				throw new InvalidOperationException("It is not valid to perform this operation on a file");
+
+			if (DirectoryExists())
+			{
+				try
+				{
+					Delete();
+				}
+				catch (IOException)
+				{
+					if (Files(true).Any())
+						throw;
+				}
+			}
+
+			return EnsureDirectoryExists();
+		}
+
 		public static NPath CreateTempDirectory(string myprefix)
 		{
 			var random = new Random();
@@ -596,6 +618,21 @@ namespace NiceIO
 			while (true)
 			{
 				if (candidate.Exists(needle))
+					return candidate;
+
+				if (candidate.IsEmpty())
+					return null;
+				candidate = candidate.Parent;
+			}
+		}
+
+		public NPath FirstParentMatching(Func<NPath, bool> predicate)
+		{
+			ThrowIfRelative();
+			var candidate = this;
+			while (true)
+			{
+				if (predicate(candidate))
 					return candidate;
 
 				if (candidate.IsEmpty())
