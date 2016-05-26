@@ -56,6 +56,7 @@
     <Compile Include="Exists.cs" />
     <Compile Include="Contents.cs" />
     <Compile Include="ExtensionWithDot.cs" />
+    <Compile Include="FirstParentMatching.cs" />
     <Compile Include="GetHashCode.cs" />
     <Compile Include="HasExtension.cs" />
     <Compile Include="IsChildOf.cs" />
