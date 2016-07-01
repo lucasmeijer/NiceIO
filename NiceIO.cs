@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace NiceIO
 {
 	public class NPath
 	{
-        private static readonly StringComparison PathStringComparison = IsLinux() ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
+		private static readonly StringComparison PathStringComparison = IsLinux() ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
 
-	    private readonly string[] _elements;
+		private readonly string[] _elements;
 		private readonly bool _isRelative;
 		private readonly string _driveLetter;
 
@@ -26,7 +25,7 @@ namespace NiceIO
 
 			var split = path.Split('/', '\\');
 
-			_isRelative = IsRelativeFromSplitString(split);
+			_isRelative = _driveLetter == null && IsRelativeFromSplitString(split);
 
 			_elements = ParseSplitStringIntoElements(split.Where(s => s.Length > 0).ToArray());
 		}
@@ -206,6 +205,9 @@ namespace NiceIO
 
 		public string ToString(SlashMode slashMode)
 		{
+			if (_isRelative && _elements.Length == 0)
+				return ".";
+
 			var sb = new StringBuilder();
 			if (_driveLetter != null)
 			{
@@ -415,6 +417,14 @@ namespace NiceIO
 				return CopyWithDeterminedDestination(dest.Combine(FileName), fileFilter);
 
 			return CopyWithDeterminedDestination (dest, fileFilter);
+		}
+
+		public NPath MakeAbsolute()
+		{
+			if (!IsRelative)
+				return this;
+			
+			return NPath.CurrentDirectory.Combine (this);
 		}
 
 		NPath CopyWithDeterminedDestination(NPath absoluteDestination, Func<NPath,bool> fileFilter)
@@ -687,6 +697,11 @@ namespace NiceIO
 		public static IEnumerable<string> InQuotes(this IEnumerable<NPath> self, SlashMode forward = SlashMode.Native)
 		{
 			return self.Select(p => p.InQuotes(forward));
+		}
+
+		public static NPath ToNPath(this string path)
+		{
+			return new NPath(path);
 		}
 	}
 
