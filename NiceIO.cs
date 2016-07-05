@@ -121,6 +121,8 @@ namespace NiceIO
 		{
 			var newElements = (string[])_elements.Clone();
 			newElements[newElements.Length - 1] = Path.ChangeExtension(_elements[_elements.Length - 1], WithDot(extension));
+			if (extension == string.Empty)
+				newElements[newElements.Length - 1] = newElements[newElements.Length - 1].TrimEnd('.');
 			return new NPath(newElements, _isRelative, _driveLetter);
 		}
 		#endregion construction
