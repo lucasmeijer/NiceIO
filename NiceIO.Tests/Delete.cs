@@ -92,6 +92,7 @@ namespace NiceIO.Tests
 		}
 
 		[Test]
+		[Platform(Include = "Win")]
 		public void DeleteContentsOfDirectoryThrowsWhenFileCannotBeDeleted()
 		{
 			PopulateTempDir(new[]
