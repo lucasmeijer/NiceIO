@@ -73,5 +73,41 @@ namespace NiceIO.Tests
 
 			AssertTempDir(new [] {"somefile2"});
 		}
+
+		[Test]
+		public void DeleteContentsOfDirectory()
+		{
+			PopulateTempDir(new[]
+			{
+				"somedir/",
+				"somedir/somefile"
+			});
+
+			var path = _tempPath.Combine("somedir");
+			Assert.IsTrue(path.DirectoryExists());
+
+			path.DeleteContents();
+
+			AssertTempDir(new[] { "somedir/" });
+		}
+
+		[Test]
+		[Platform(Include = "Win")]
+		public void DeleteContentsOfDirectoryThrowsWhenFileCannotBeDeleted()
+		{
+			PopulateTempDir(new[]
+			{
+				"somedir/",
+				"somedir/somefile"
+			});
+
+			var path = _tempPath.Combine("somedir");
+			Assert.IsTrue(path.DirectoryExists());
+
+			using (var writer = File.Open(path.Combine("somefile").ToString(), FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+			{
+				Assert.Throws<IOException>(() => path.DeleteContents());
+			}
+		}
 	}
 }

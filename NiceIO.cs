@@ -482,6 +482,31 @@ namespace NiceIO
 				throw new InvalidOperationException("Trying to delete a path that does not exist: " + ToString());
 		}
 
+		public NPath DeleteContents()
+		{
+			ThrowIfRelative();
+			if (FileExists())
+				throw new InvalidOperationException("It is not valid to perform this operation on a file");
+
+			if (DirectoryExists())
+			{
+				try
+				{
+					Files().Delete();
+					Directories().Delete();
+				}
+				catch (IOException)
+				{
+					if (Files(true).Any())
+						throw;
+				}
+
+				return this;
+			}
+
+			return EnsureDirectoryExists();
+		}
+
 		public static NPath CreateTempDirectory(string myprefix)
 		{
 			var random = new Random();
@@ -602,6 +627,24 @@ namespace NiceIO
 			return Parent.IsChildOf(potentialBasePath);
 		}
 
+		public IEnumerable<NPath> RecursiveParents
+		{
+			get
+			{
+				ThrowIfRelative();
+
+				var candidate = this;
+				while (true)
+				{
+					if(candidate.IsEmpty())
+						yield break;
+
+					candidate = candidate.Parent;
+					yield return candidate;
+				}
+			}
+		}
+
 		public NPath ParentContaining(string needle)
 		{
 			return ParentContaining(new NPath(needle));
@@ -609,17 +652,7 @@ namespace NiceIO
 
 		public NPath ParentContaining(NPath needle)
 		{
-			ThrowIfRelative();
-			var candidate = this;
-			while (true)
-			{
-				if (candidate.Exists(needle))
-					return candidate;
-
-				if (candidate.IsEmpty())
-					return null;
-				candidate = candidate.Parent;
-			}
+			return RecursiveParents.FirstOrDefault(p => p.Exists(needle));
 		}
 
 		public NPath WriteAllText(string contents)
