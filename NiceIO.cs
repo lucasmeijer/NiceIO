@@ -627,6 +627,24 @@ namespace NiceIO
 			return Parent.IsChildOf(potentialBasePath);
 		}
 
+		public IEnumerable<NPath> RecursiveParents
+		{
+			get
+			{
+				ThrowIfRelative();
+
+				var candidate = this;
+				while (true)
+				{
+					if(candidate.IsEmpty())
+						yield break;
+
+					candidate = candidate.Parent;
+					yield return candidate;
+				}
+			}
+		}
+
 		public NPath ParentContaining(string needle)
 		{
 			return ParentContaining(new NPath(needle));
@@ -634,32 +652,12 @@ namespace NiceIO
 
 		public NPath ParentContaining(NPath needle)
 		{
-			ThrowIfRelative();
-			var candidate = this;
-			while (true)
-			{
-				if (candidate.Exists(needle))
-					return candidate;
-
-				if (candidate.IsEmpty())
-					return null;
-				candidate = candidate.Parent;
-			}
+			return RecursiveParents.FirstOrDefault(p => p.Exists(needle));
 		}
 
 		public NPath FirstParentMatching(Func<NPath, bool> predicate)
 		{
-			ThrowIfRelative();
-			var candidate = this;
-			while (true)
-			{
-				if (predicate(candidate))
-					return candidate;
-
-				if (candidate.IsEmpty())
-					return null;
-				candidate = candidate.Parent;
-			}
+			return RecursiveParents.FirstOrDefault(predicate);
 		}
 
 		public NPath WriteAllText(string contents)
