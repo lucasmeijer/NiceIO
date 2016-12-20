@@ -12,6 +12,7 @@ namespace NiceIO.Tests
 			var path2 = new NPath("myfile");
 			Assert.IsTrue(path1.Equals(path2));
 			Assert.IsTrue(path1 == path2);
+			Assert.AreEqual(path1.GetHashCode(), path2.GetHashCode());
 		}
 
 		[Test]
@@ -21,6 +22,7 @@ namespace NiceIO.Tests
 			var path2 = new NPath(@"mydir\myfile");
 			Assert.IsTrue(path1.Equals(path2));
 			Assert.IsTrue(path1 == path2);
+			Assert.AreEqual(path1.GetHashCode(), path2.GetHashCode());
 		}
 
 		[Test]
@@ -30,6 +32,7 @@ namespace NiceIO.Tests
 			var path2 = new NPath(@"e:\mydir\myfile");
 			Assert.IsFalse(path1.Equals(path2));
 			Assert.IsFalse(path1 == path2);
+			Assert.AreNotEqual(path1.GetHashCode(), path2.GetHashCode());
 		}
 
 		[Test]
@@ -39,6 +42,7 @@ namespace NiceIO.Tests
 			var path2 = new NPath(@"mydir\myfile");
 			Assert.IsFalse(path1.Equals(path2));
 			Assert.IsFalse(path1 == path2);
+			Assert.AreNotEqual(path1.GetHashCode(), path2.GetHashCode());
 		}
 
 		[Test]
@@ -48,6 +52,7 @@ namespace NiceIO.Tests
 			var path2 = new NPath(@"mydir/mydir2/");
 			Assert.IsTrue(path1.Equals(path2));
 			Assert.IsTrue(path1 == path2);
+			Assert.AreEqual(path1.GetHashCode(), path2.GetHashCode());
 		}
 	}
 }

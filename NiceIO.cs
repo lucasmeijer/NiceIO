@@ -6,7 +6,7 @@ using System.Text;
 
 namespace NiceIO
 {
-	public class NPath
+	public class NPath : IEquatable<NPath>
 	{
 		private static readonly StringComparison PathStringComparison = IsLinux() ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
 
@@ -253,6 +253,11 @@ namespace NiceIO
 			if ((Object)p == null)
 				return false;
 
+			return Equals(p);
+		}
+
+		public bool Equals(NPath p)
+		{
 			if (p._isRelative != _isRelative)
 				return false;
 
@@ -290,7 +295,8 @@ namespace NiceIO
 				int hash = 17;
 				// Suitable nullity checks etc, of course :)
 				hash = hash * 23 + _isRelative.GetHashCode();
-				hash = hash * 23 + _elements.GetHashCode();
+				foreach (var element in _elements)
+					hash = hash * 23 + element.GetHashCode();
 				if (_driveLetter != null)
 					hash = hash * 23 + _driveLetter.GetHashCode();
 				return hash;
