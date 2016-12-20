@@ -103,7 +103,7 @@ namespace NiceIO.Tests
 			var path = _tempPath.Combine("somedir");
 			Assert.IsTrue(path.DirectoryExists());
 
-			using (var writer = new StreamWriter(path.Combine("somefile").ToString()))
+			using (var writer = File.Open(path.Combine("somefile").ToString(), FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
 			{
 				Assert.Throws<IOException>(() => path.DeleteContents());
 			}
