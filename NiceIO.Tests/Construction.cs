@@ -86,7 +86,7 @@ namespace NiceIO.Tests
 		[Test]
 		public void WithEmptyString()
 		{
-			Assert.AreEqual("",new NPath("").ToString());
+			Assert.AreEqual(".", new NPath("").ToString());
 		}
 	}
 }

@@ -25,7 +25,7 @@ namespace NiceIO.Tests
 		{
 			foreach (var entry in entries)
 			{
-				if (entry[entry.Length - 1] == '/')
+				if (entry[entry.Length - 1] == '/' || entry[entry.Length - 1] == '\\')
 					Directory.CreateDirectory(_tempPath + "/" + entry);
 				else
 					File.WriteAllText(_tempPath + "/" + entry, "hello");

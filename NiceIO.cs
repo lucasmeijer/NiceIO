@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace NiceIO
 {
-	public class NPath
+	public class NPath : IEquatable<NPath>
 	{
-        private static readonly StringComparison PathStringComparison = IsLinux() ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
+		private static readonly StringComparison PathStringComparison = IsLinux() ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
 
-	    private readonly string[] _elements;
+		private readonly string[] _elements;
 		private readonly bool _isRelative;
 		private readonly string _driveLetter;
 
@@ -26,7 +25,7 @@ namespace NiceIO
 
 			var split = path.Split('/', '\\');
 
-			_isRelative = IsRelativeFromSplitString(split);
+			_isRelative = _driveLetter == null && IsRelativeFromSplitString(split);
 
 			_elements = ParseSplitStringIntoElements(split.Where(s => s.Length > 0).ToArray());
 		}
@@ -122,6 +121,8 @@ namespace NiceIO
 		{
 			var newElements = (string[])_elements.Clone();
 			newElements[newElements.Length - 1] = Path.ChangeExtension(_elements[_elements.Length - 1], WithDot(extension));
+			if (extension == string.Empty)
+				newElements[newElements.Length - 1] = newElements[newElements.Length - 1].TrimEnd('.');
 			return new NPath(newElements, _isRelative, _driveLetter);
 		}
 		#endregion construction
@@ -206,6 +207,9 @@ namespace NiceIO
 
 		public string ToString(SlashMode slashMode)
 		{
+			if (_isRelative && _elements.Length == 0)
+				return ".";
+
 			var sb = new StringBuilder();
 			if (_driveLetter != null)
 			{
@@ -249,6 +253,11 @@ namespace NiceIO
 			if ((Object)p == null)
 				return false;
 
+			return Equals(p);
+		}
+
+		public bool Equals(NPath p)
+		{
 			if (p._isRelative != _isRelative)
 				return false;
 
@@ -286,7 +295,8 @@ namespace NiceIO
 				int hash = 17;
 				// Suitable nullity checks etc, of course :)
 				hash = hash * 23 + _isRelative.GetHashCode();
-				hash = hash * 23 + _elements.GetHashCode();
+				foreach (var element in _elements)
+					hash = hash * 23 + element.GetHashCode();
 				if (_driveLetter != null)
 					hash = hash * 23 + _driveLetter.GetHashCode();
 				return hash;
@@ -415,6 +425,14 @@ namespace NiceIO
 				return CopyWithDeterminedDestination(dest.Combine(FileName), fileFilter);
 
 			return CopyWithDeterminedDestination (dest, fileFilter);
+		}
+
+		public NPath MakeAbsolute()
+		{
+			if (!IsRelative)
+				return this;
+			
+			return NPath.CurrentDirectory.Combine (this);
 		}
 
 		NPath CopyWithDeterminedDestination(NPath absoluteDestination, Func<NPath,bool> fileFilter)
@@ -674,6 +692,12 @@ namespace NiceIO
 			destination.EnsureDirectoryExists();
 			return Files(recurse).Where(fileFilter ?? AlwaysTrue).Select(file => file.Copy(destination.Combine(file.RelativeTo(this)))).ToArray();
 		}
+		
+		public IEnumerable<NPath> MoveFiles(NPath destination, bool recurse, Func<NPath, bool> fileFilter = null)
+		{
+			destination.EnsureDirectoryExists();
+			return Files(recurse).Where(fileFilter ?? AlwaysTrue).Select(file => file.Move(destination.Combine(file.RelativeTo(this)))).ToArray();
+		}
 
 		static bool AlwaysTrue(NPath p)
 		{
@@ -724,6 +748,11 @@ namespace NiceIO
 		public static IEnumerable<string> InQuotes(this IEnumerable<NPath> self, SlashMode forward = SlashMode.Native)
 		{
 			return self.Select(p => p.InQuotes(forward));
+		}
+
+		public static NPath ToNPath(this string path)
+		{
+			return new NPath(path);
 		}
 	}
 
