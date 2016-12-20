@@ -655,6 +655,12 @@ namespace NiceIO
 			destination.EnsureDirectoryExists();
 			return Files(recurse).Where(fileFilter ?? AlwaysTrue).Select(file => file.Copy(destination.Combine(file.RelativeTo(this)))).ToArray();
 		}
+		
+		public IEnumerable<NPath> MoveFiles(NPath destination, bool recurse, Func<NPath, bool> fileFilter = null)
+		{
+			destination.EnsureDirectoryExists();
+			return Files(recurse).Where(fileFilter ?? AlwaysTrue).Select(file => file.Move(destination.Combine(file.RelativeTo(this)))).ToArray();
+		}
 
 		static bool AlwaysTrue(NPath p)
 		{
