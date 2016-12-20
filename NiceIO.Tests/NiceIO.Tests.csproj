@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="ChangeExtension.cs" />
     <Compile Include="Combine.cs" />
+    <Compile Include="Compare.cs" />
     <Compile Include="Construction.cs" />
     <Compile Include="CopyFiles.cs" />
     <Compile Include="CopyDirectory.cs" />

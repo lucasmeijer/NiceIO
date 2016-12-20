@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.IO;
+using NUnit.Framework;
 
 namespace NiceIO.Tests
 {
@@ -33,6 +34,32 @@ namespace NiceIO.Tests
 			PopulateTempDir(new[] {"some file"});
 			Assert.IsTrue(_tempPath.Combine("some file").FileExists());
 			AssertTempDir(new [] {"some file"});
+		}
+
+		[Test]
+		public void AssertFileExistsOkWhenExists()
+		{
+			PopulateTempDir(new[] { "somefile" });
+			Assert.That(_tempPath.Combine("somefile"), Is.EqualTo(_tempPath.Combine("somefile").AssertFileExists()));
+		}
+
+		[Test]
+		public void AssertFileExistsThrowsWhenDoesNotExists()
+		{
+			Assert.Throws<FileNotFoundException>(() => _tempPath.Combine("somefile").AssertFileExists());
+		}
+
+		[Test]
+		public void AssertDirectoryExistsOkWhenExists()
+		{
+			PopulateTempDir(new[] { "somefile/" });
+			Assert.That(_tempPath.Combine("somefile"), Is.EqualTo(_tempPath.Combine("somefile").AssertDirectoryExists()));
+		}
+
+		[Test]
+		public void AssertDirectExistsThrowsWhenDoesNotExists()
+		{
+			Assert.Throws<DirectoryNotFoundException>(() => _tempPath.Combine("somefile").AssertDirectoryExists());
 		}
 	}
 }
