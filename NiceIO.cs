@@ -655,11 +655,6 @@ namespace NiceIO
 			return RecursiveParents.FirstOrDefault(p => p.Exists(needle));
 		}
 
-		public NPath FirstParentMatching(Func<NPath, bool> predicate)
-		{
-			return RecursiveParents.FirstOrDefault(predicate);
-		}
-
 		public NPath WriteAllText(string contents)
 		{
 			ThrowIfRelative();
