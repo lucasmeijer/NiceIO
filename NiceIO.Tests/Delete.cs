@@ -73,5 +73,40 @@ namespace NiceIO.Tests
 
 			AssertTempDir(new [] {"somefile2"});
 		}
+
+		[Test]
+		public void DeleteContentsOfDirectory()
+		{
+			PopulateTempDir(new[]
+			{
+				"somedir/",
+				"somedir/somefile"
+			});
+
+			var path = _tempPath.Combine("somedir");
+			Assert.IsTrue(path.DirectoryExists());
+
+			path.DeleteContents();
+
+			AssertTempDir(new[] { "somedir/" });
+		}
+
+		[Test]
+		public void DeleteContentsOfDirectoryThrowsWhenFileCannotBeDeleted()
+		{
+			PopulateTempDir(new[]
+			{
+				"somedir/",
+				"somedir/somefile"
+			});
+
+			var path = _tempPath.Combine("somedir");
+			Assert.IsTrue(path.DirectoryExists());
+
+			using (var reader = new StreamReader(path.Combine("somefile").ToString()))
+			{
+				Assert.Throws<IOException>(() => path.DeleteContents());
+			}
+		}
 	}
 }
