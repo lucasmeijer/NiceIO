@@ -117,7 +117,7 @@ namespace NiceIO
 					throw new ArgumentException("Path.RelativeTo() was invoked with two paths that are on different volumes. invoked on: " + ToString() + " asked to be made relative to: " + path);
 
 				NPath commonParent = null;
-				foreach(var parent in RecursiveParents)
+				foreach (var parent in RecursiveParents)
 				{
 					commonParent = path.RecursiveParents.FirstOrDefault(otherParent => otherParent == parent);
 
