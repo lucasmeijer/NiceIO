@@ -6,7 +6,7 @@ using System.Text;
 
 namespace NiceIO
 {
-	public class NPath : IEquatable<NPath>
+	public class NPath : IEquatable<NPath>, IComparable
 	{
 		private static readonly StringComparison PathStringComparison = IsLinux() ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
 
@@ -303,6 +303,14 @@ namespace NiceIO
 			}
 		}
 
+		public int CompareTo(object obj)
+		{
+			if (obj == null)
+				return -1;
+
+			return this.MakeAbsolute().ToString().CompareTo(((NPath)obj).MakeAbsolute().ToString());
+		}
+
 		public static bool operator !=(NPath a, NPath b)
 		{
 			return !(a == b);
@@ -482,6 +490,14 @@ namespace NiceIO
 				throw new InvalidOperationException("Trying to delete a path that does not exist: " + ToString());
 		}
 
+		public void DeleteIfExists(DeleteMode deleteMode = DeleteMode.Normal)
+		{
+			ThrowIfRelative();
+
+			if (FileExists() || DirectoryExists())
+				Delete(deleteMode);
+		}
+
 		public NPath DeleteContents()
 		{
 			ThrowIfRelative();
@@ -606,6 +622,22 @@ namespace NiceIO
 			var parent = Parent;
 			parent.EnsureDirectoryExists();
 			return parent;
+		}
+
+		public NPath AssertFileExists()
+		{
+			if (!FileExists())
+				throw new FileNotFoundException("File was expected to exist : " + ToString());
+
+			return this;
+		}
+
+		public NPath AssertDirectoryExists()
+		{
+			if (!DirectoryExists())
+				throw new DirectoryNotFoundException("Expected directory to exist : " + ToString());
+
+			return this;
 		}
 
 		public bool IsChildOf(string potentialBasePath)

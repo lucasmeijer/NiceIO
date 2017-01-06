@@ -109,5 +109,24 @@ namespace NiceIO.Tests
 				Assert.Throws<IOException>(() => path.DeleteContents());
 			}
 		}
+
+		public void DeleteIfExistsOnFileThatExists()
+		{
+			PopulateTempDir(new[] { "somefile" });
+
+			var path = _tempPath.Combine("somefile");
+			path.DeleteIfExists();
+
+			AssertTempDir(new string[0]);
+		}
+
+		[Test]
+		public void DeleteIfExistsOnFileThatDoesNotExist()
+		{
+			var path = _tempPath.Combine("somefile");
+			path.DeleteIfExists();
+
+			AssertTempDir(new string[0]);
+		}
 	}
 }
