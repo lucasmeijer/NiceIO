@@ -113,7 +113,7 @@ namespace NiceIO
 		{
 			if (!IsChildOf(path))
 			{
-				if (!IsRelative && !path.IsRelative && !SameVolumeAs(path))
+				if (!IsRelative && !path.IsRelative && _driveLetter != path._driveLetter)
 					throw new ArgumentException("Path.RelativeTo() was invoked with two paths that are on different volumes. invoked on: " + ToString() + " asked to be made relative to: " + path);
 
 				NPath commonParent = null;
@@ -648,14 +648,6 @@ namespace NiceIO
 				return true;
 
 			return Parent.IsChildOf(potentialBasePath);
-		}
-
-		public bool SameVolumeAs(NPath path)
-		{
-			ThrowIfRelative();
-			path.ThrowIfRelative();
-
-			return _driveLetter == path._driveLetter;
 		}
 
 		public IEnumerable<NPath> RecursiveParents

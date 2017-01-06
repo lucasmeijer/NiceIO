@@ -92,41 +92,5 @@ namespace NiceIO.Tests
 		{
 			Assert.That(new NPath("my/path/is/kind/of/long").Depth, Is.EqualTo(6));
 		}
-
-		[Test]
-		public void SameVolumeAsWindowsPathOnSame()
-		{
-			Assert.That(new NPath("C:\\my\\path").SameVolumeAs(new NPath("C:\\")), Is.True);
-		}
-
-		[Test]
-		public void SameVolumeAsWindowsPathOnDifferent()
-		{
-			Assert.That(new NPath("C:\\my\\path").SameVolumeAs(new NPath("E:\\")), Is.False);
-		}
-
-		[Test]
-		public void SameVolumeAsLinuxPath()
-		{
-			Assert.That(new NPath("/my/path").SameVolumeAs(new NPath("/my")), Is.True);
-		}
-
-		[Test]
-		public void SameVolumeAsBothRelative()
-		{
-			Assert.Throws<ArgumentException>(() => new NPath("my/path").SameVolumeAs(new NPath("my")));
-		}
-
-		[Test]
-		public void SameVolumeAsThisRelative()
-		{
-			Assert.Throws<ArgumentException>(() => new NPath("my/path").SameVolumeAs(new NPath("/my")));
-		}
-
-		[Test]
-		public void SameVolumeAsOtherRelative()
-		{
-			Assert.Throws<ArgumentException>(() => new NPath("/my/path").SameVolumeAs(new NPath("my")));
-		}
 	}
 }
