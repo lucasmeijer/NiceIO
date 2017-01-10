@@ -128,6 +128,9 @@ namespace NiceIO
 				if (commonParent == null)
 					throw new ArgumentException("Path.RelativeTo() was unable to find a common parent between " + ToString() + " and " + path);
 
+				if (IsRelative && path.IsRelative && commonParent.IsEmpty())
+					throw new ArgumentException("Path.RelativeTo() was invoked with two relative paths that do not share a common parent.  Invoked on: " + ToString() + " asked to be made relative to: " + path);
+
 				var depthDiff = path.Depth - commonParent.Depth;
 				return new NPath(Enumerable.Repeat("..", depthDiff).Concat(_elements.Skip(commonParent.Depth)).ToArray(), true, null);
 			}

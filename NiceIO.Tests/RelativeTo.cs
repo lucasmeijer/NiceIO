@@ -39,6 +39,12 @@ namespace NiceIO.Tests
 		}
 
 		[Test]
+		public void RelativeAndRelativeNoCommonParent()
+		{
+			Assert.Throws<ArgumentException>(() => new NPath("mydir1/mydir2/myfile").RelativeTo(new NPath("somethingelse")).ToString(SlashMode.Forward));
+		}
+
+		[Test]
 		public void ToAnUnrelatedDirectory()
 		{
 			var relative = new NPath("/mydir1/mydir2/myfile").RelativeTo(new NPath("/unrelated"));
