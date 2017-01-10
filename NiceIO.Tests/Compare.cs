@@ -37,21 +37,21 @@ namespace NiceIO.Tests
 		}
 
 		[Test]
-		public void FullPathToRelativePathOfSameLocation()
+		public void FullPathToRelativePathAreNotEqual()
 		{
 			var path1 = NPath.CurrentDirectory.Combine("myfile.txt");
 			var path2 = new NPath("myfile.txt");
 
-			Assert.That(path1.CompareTo(path2), Is.EqualTo(0));
+			Assert.That(path1.CompareTo(path2), Is.EqualTo(-1));
 		}
 
 		[Test]
-		public void RelativeToFullPathOfSameLocation()
+		public void RelativeToFullPathAreNotEqual()
 		{
 			var path1 = new NPath("myfile.txt");
 			var path2 = NPath.CurrentDirectory.Combine("myfile.txt");
 
-			Assert.That(path1.CompareTo(path2), Is.EqualTo(0));
+			Assert.That(path1.CompareTo(path2), Is.EqualTo(1));
 		}
 
 		[Test]

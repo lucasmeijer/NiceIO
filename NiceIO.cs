@@ -308,7 +308,7 @@ namespace NiceIO
 			if (obj == null)
 				return -1;
 
-			return this.MakeAbsolute().ToString().CompareTo(((NPath)obj).MakeAbsolute().ToString());
+			return this.ToString().CompareTo(((NPath)obj).ToString());
 		}
 
 		public static bool operator !=(NPath a, NPath b)
