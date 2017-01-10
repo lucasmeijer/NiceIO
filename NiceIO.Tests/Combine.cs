@@ -41,5 +41,11 @@ namespace NiceIO.Tests
 		{
 			Assert.AreEqual(new NPath("/a/b/c/d/e"), new NPath("/a").Combine("b", "c/d", "e"));
 		}
+
+		[Test]
+		public void RelativeThatGoesAboveRoot()
+		{
+			Assert.Throws<ArgumentException>(() => new NPath("/a").Combine(new NPath("../../b")));
+		}
 	}
 }
