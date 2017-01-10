@@ -624,7 +624,7 @@ namespace NiceIO
 			return parent;
 		}
 
-		public NPath AssertFileExists()
+		public NPath FileMustExist()
 		{
 			if (!FileExists())
 				throw new FileNotFoundException("File was expected to exist : " + ToString());
@@ -632,7 +632,7 @@ namespace NiceIO
 			return this;
 		}
 
-		public NPath AssertDirectoryExists()
+		public NPath DirectoryMustExist()
 		{
 			if (!DirectoryExists())
 				throw new DirectoryNotFoundException("Expected directory to exist : " + ToString());

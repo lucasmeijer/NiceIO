@@ -37,29 +37,29 @@ namespace NiceIO.Tests
 		}
 
 		[Test]
-		public void AssertFileExistsOkWhenExists()
+		public void FileMustExistOkWhenExists()
 		{
 			PopulateTempDir(new[] { "somefile" });
-			Assert.That(_tempPath.Combine("somefile"), Is.EqualTo(_tempPath.Combine("somefile").AssertFileExists()));
+			Assert.That(_tempPath.Combine("somefile"), Is.EqualTo(_tempPath.Combine("somefile").FileMustExist()));
 		}
 
 		[Test]
-		public void AssertFileExistsThrowsWhenDoesNotExists()
+		public void FileMustExistThrowsWhenDoesNotExists()
 		{
-			Assert.Throws<FileNotFoundException>(() => _tempPath.Combine("somefile").AssertFileExists());
+			Assert.Throws<FileNotFoundException>(() => _tempPath.Combine("somefile").FileMustExist());
 		}
 
 		[Test]
-		public void AssertDirectoryExistsOkWhenExists()
+		public void DirectoryMustExistOkWhenExists()
 		{
 			PopulateTempDir(new[] { "somefile/" });
-			Assert.That(_tempPath.Combine("somefile"), Is.EqualTo(_tempPath.Combine("somefile").AssertDirectoryExists()));
+			Assert.That(_tempPath.Combine("somefile"), Is.EqualTo(_tempPath.Combine("somefile").DirectoryMustExist()));
 		}
 
 		[Test]
-		public void AssertDirectExistsThrowsWhenDoesNotExists()
+		public void DirectMustExistThrowsWhenDoesNotExists()
 		{
-			Assert.Throws<DirectoryNotFoundException>(() => _tempPath.Combine("somefile").AssertDirectoryExists());
+			Assert.Throws<DirectoryNotFoundException>(() => _tempPath.Combine("somefile").DirectoryMustExist());
 		}
 	}
 }
