@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -72,6 +73,24 @@ namespace NiceIO.Tests
 			CollectionAssert.AreEquivalent(new[] { "myfile.txt", "source.cpp" }, currentDirRelative.Files(recurse: true).Select(p => p.FileName));
 
 			Directory.SetCurrentDirectory(originalCurrentDirectory);
+		}
+
+		[Test]
+		public void DepthWindowsPath()
+		{
+			Assert.That(new NPath("C:\\my\\path\\is\\kind\\of\\long").Depth, Is.EqualTo(6));
+		}
+
+		[Test]
+		public void DepthLinuxPath()
+		{
+			Assert.That(new NPath("/my/path/is/kind/of/long").Depth, Is.EqualTo(6));
+		}
+
+		[Test]
+		public void DepthRelativePath()
+		{
+			Assert.That(new NPath("my/path/is/kind/of/long").Depth, Is.EqualTo(6));
 		}
 	}
 }

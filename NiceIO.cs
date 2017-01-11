@@ -112,7 +112,28 @@ namespace NiceIO
 		public NPath RelativeTo(NPath path)
 		{
 			if (!IsChildOf(path))
-				throw new ArgumentException("Path.RelativeTo() was invoked with two paths that are unrelated. invoked on: " + ToString() + " asked to be made relative to: " + path);
+			{
+				if (!IsRelative && !path.IsRelative && _driveLetter != path._driveLetter)
+					throw new ArgumentException("Path.RelativeTo() was invoked with two paths that are on different volumes. invoked on: " + ToString() + " asked to be made relative to: " + path);
+
+				NPath commonParent = null;
+				foreach (var parent in RecursiveParents)
+				{
+					commonParent = path.RecursiveParents.FirstOrDefault(otherParent => otherParent == parent);
+
+					if (commonParent != null)
+						break;
+				}
+
+				if (commonParent == null)
+					throw new ArgumentException("Path.RelativeTo() was unable to find a common parent between " + ToString() + " and " + path);
+
+				if (IsRelative && path.IsRelative && commonParent.IsEmpty())
+					throw new ArgumentException("Path.RelativeTo() was invoked with two relative paths that do not share a common parent.  Invoked on: " + ToString() + " asked to be made relative to: " + path);
+
+				var depthDiff = path.Depth - commonParent.Depth;
+				return new NPath(Enumerable.Repeat("..", depthDiff).Concat(_elements.Skip(commonParent.Depth)).ToArray(), true, null);
+			}
 
 			return new NPath(_elements.Skip(path._elements.Length).ToArray(), true, null);
 		}
@@ -147,6 +168,11 @@ namespace NiceIO
 		public IEnumerable<string> Elements
 		{
 			get { return _elements; }
+		}
+
+		public int Depth
+		{
+			get { return _elements.Length; }
 		}
 
 		public bool Exists(string append = "")
@@ -663,8 +689,6 @@ namespace NiceIO
 		{
 			get
 			{
-				ThrowIfRelative();
-
 				var candidate = this;
 				while (true)
 				{
@@ -684,6 +708,8 @@ namespace NiceIO
 
 		public NPath ParentContaining(NPath needle)
 		{
+			ThrowIfRelative();
+
 			return RecursiveParents.FirstOrDefault(p => p.Exists(needle));
 		}
 

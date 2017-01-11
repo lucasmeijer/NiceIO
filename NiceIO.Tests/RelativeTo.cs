@@ -39,15 +39,63 @@ namespace NiceIO.Tests
 		}
 
 		[Test]
+		public void RelativeAndRelativeNoCommonParent()
+		{
+			Assert.Throws<ArgumentException>(() => new NPath("mydir1/mydir2/myfile").RelativeTo(new NPath("somethingelse")).ToString(SlashMode.Forward));
+		}
+
+		[Test]
 		public void ToAnUnrelatedDirectory()
 		{
-			Assert.Throws<ArgumentException>(() => new NPath("/mydir1/mydir2/myfile").RelativeTo(new NPath("/unrelated")));
+			var relative = new NPath("/mydir1/mydir2/myfile").RelativeTo(new NPath("/unrelated"));
+			Assert.AreEqual("../mydir1/mydir2/myfile", relative.ToString(SlashMode.Forward));
+			Assert.IsTrue(relative.IsRelative);
 		}
 
 		[Test]
 		public void RootOfDrive()
 		{
 			Assert.IsFalse(new NPath("D:\\").IsRelative);
+		}
+
+		[Test]
+		public void WhenNotAChildSameLevel()
+		{
+			var relative = new NPath("/mydir1/mydir2/myfile").RelativeTo(new NPath("/mydir1/mydir2/mydir3"));
+			Assert.AreEqual("../myfile", relative.ToString(SlashMode.Forward));
+			Assert.IsTrue(relative.IsRelative);
+		}
+
+		[Test]
+		public void WhenNotAChildSameLevelAndRelative()
+		{
+			var relative = new NPath("mydir1/mydir2/myfile").RelativeTo(new NPath("mydir1/mydir2/mydir3"));
+			Assert.AreEqual("../myfile", relative.ToString(SlashMode.Forward));
+			Assert.IsTrue(relative.IsRelative);
+		}
+
+		[Test]
+		public void WhenNotAChildParentLevel()
+		{
+			var relative = new NPath("/mydir1/mydir2/myfile").RelativeTo(new NPath("/mydir1/mydir3"));
+			Assert.AreEqual("../mydir2/myfile", relative.ToString(SlashMode.Forward));
+			Assert.IsTrue(relative.IsRelative);
+		}
+
+		[Test]
+		public void WhenNotAChildAndManyParentLevels()
+		{
+			var relative = new NPath("/mydir1/mydir2/myfile").RelativeTo(new NPath("/mydir1/mydir3/mydir3.1/mydir3.2/mydir3.3/mydir3.4"));
+			Assert.AreEqual("../../../../../mydir2/myfile", relative.ToString(SlashMode.Forward));
+			Assert.IsTrue(relative.IsRelative);
+		}
+
+		[Test]
+		public void WhenNotAChildAndManySubDirLevels()
+		{
+			var relative = new NPath("/mydir1/mydir2/mydir2.1/mydir2.2/mydir2.3/mydir2.4/myfile").RelativeTo(new NPath("/mydir1/mydir3"));
+			Assert.AreEqual("../mydir2/mydir2.1/mydir2.2/mydir2.3/mydir2.4/myfile", relative.ToString(SlashMode.Forward));
+			Assert.IsTrue(relative.IsRelative);
 		}
 	}
 }
