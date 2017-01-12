@@ -12,6 +12,7 @@ namespace NiceIO
 
 		private readonly string[] _elements;
 		private readonly bool _isRelative;
+		private readonly bool _isLinuxRoot;
 		private readonly string _driveLetter;
 
 		#region construction
@@ -23,11 +24,20 @@ namespace NiceIO
 
 			path = ParseDriveLetter(path, out _driveLetter);
 
-			var split = path.Split('/', '\\');
+			if (path == "/")
+			{
+				_isRelative = false;
+				_isLinuxRoot = true;
+				_elements = new string[] {};
+			}
+			else
+			{
+				var split = path.Split('/', '\\');
 
-			_isRelative = _driveLetter == null && IsRelativeFromSplitString(split);
+				_isRelative = _driveLetter == null && IsRelativeFromSplitString(split);
 
-			_elements = ParseSplitStringIntoElements(split.Where(s => s.Length > 0).ToArray());
+				_elements = ParseSplitStringIntoElements(split.Where(s => s.Length > 0).ToArray());
+			}
 		}
 
 		private string[] ParseSplitStringIntoElements(IEnumerable<string> inputs)
@@ -126,7 +136,9 @@ namespace NiceIO
 				}
 
 				if (commonParent == null)
+				{
 					throw new ArgumentException("Path.RelativeTo() was unable to find a common parent between " + ToString() + " and " + path);
+				}
 
 				if (IsRelative && path.IsRelative && commonParent.IsEmpty())
 					throw new ArgumentException("Path.RelativeTo() was invoked with two relative paths that do not share a common parent.  Invoked on: " + ToString() + " asked to be made relative to: " + path);
@@ -233,6 +245,9 @@ namespace NiceIO
 
 		public string ToString(SlashMode slashMode)
 		{
+			if (_isLinuxRoot && _elements.Length == 0)
+				return Slash(slashMode).ToString();
+
 			if (_isRelative && _elements.Length == 0)
 				return ".";
 
@@ -675,6 +690,14 @@ namespace NiceIO
 		{
 			if ((IsRelative && !potentialBasePath.IsRelative) || !IsRelative && potentialBasePath.IsRelative)
 				throw new ArgumentException("You can only call IsChildOf with two relative paths, or with two absolute paths");
+
+			// If the other path is the root directory, then anything is relative to it as long as it's not a Windows path
+			if (potentialBasePath._isLinuxRoot)
+			{
+				if (!string.IsNullOrEmpty(_driveLetter))
+					throw new ArgumentException("You cannot mix Windows rooted paths with Linux rooted paths");
+				return true;
+			}
 
 			if (IsEmpty())
 				return false;

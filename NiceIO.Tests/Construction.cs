@@ -86,7 +86,31 @@ namespace NiceIO.Tests
 		[Test]
 		public void WithEmptyString()
 		{
-			Assert.AreEqual(".", new NPath("").ToString());
+			Assert.AreEqual(".", new NPath("").ToString(SlashMode.Forward));
+		}
+
+		[Test]
+		public void LinuxRootDirectory()
+		{
+			Assert.AreEqual("/", new NPath("/").ToString(SlashMode.Forward));
+		}
+
+		[Test]
+		public void LinuxRootDirectoryIsNotRelative()
+		{
+			Assert.IsFalse(new NPath("/").IsRelative);
+		}
+
+		[Test]
+		public void WindowsRootDirectory()
+		{
+			Assert.AreEqual("C:\\", new NPath("C:\\").ToString());
+		}
+
+		[Test]
+		public void WindowsRootDirectoryIsNotRelative()
+		{
+			Assert.IsFalse(new NPath("C:\\").IsRelative);
 		}
 	}
 }

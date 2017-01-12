@@ -51,5 +51,10 @@ namespace NiceIO.Tests
 			Assert.IsFalse(new NPath("hello/there").IsChildOf(new NPath("boink")));
 		}
 
+		[Test]
+		public void WindowsPathIsChildOfLinuxRoot()
+		{
+			Assert.Throws<ArgumentException>(() => new NPath("C:\\hello\\there").IsChildOf(new NPath("/")));
+		}
 	}
 }
