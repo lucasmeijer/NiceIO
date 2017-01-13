@@ -608,7 +608,7 @@ namespace NiceIO
 			{
 				if (Path.DirectorySeparatorChar == '\\')
 					return new NPath(Environment.GetEnvironmentVariable("USERPROFILE"));
-				return new NPath(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+				return new NPath(Environment.GetEnvironmentVariable("HOME"));
 			}
 		}
 
