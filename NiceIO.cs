@@ -45,6 +45,9 @@ namespace NiceIO
 			if (elements.Length == 0 && !isRelative && string.IsNullOrEmpty(driveLetter))
 				_isLinuxRoot = true;
 
+			if (_isLinuxRoot && _isRelative)
+				throw new ArgumentException("_isRelative cannot be true when _isLinuxRoot is also true");
+
 			_elements = elements;
 			_isRelative = isRelative;
 			_driveLetter = driveLetter;
