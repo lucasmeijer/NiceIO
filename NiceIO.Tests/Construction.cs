@@ -116,13 +116,53 @@ namespace NiceIO.Tests
 		[Test]
 		public void ConstructionOfAbsolutePathWithDotDotsWindowsStyle()
 		{
-			Assert.AreEqual("c:\\this\\is\\yet_can_have_dots", new NPath("c:\\this\\is\\so\\absolute\\..\\..\\yet_can_have_dots").ToString());
+			var value = new NPath("c:\\this\\is\\so\\absolute\\..\\..\\yet_can_have_dots");
+			Assert.AreEqual(3, value.Depth);
+			Assert.AreEqual("c:\\this\\is\\yet_can_have_dots", value.ToString());
 		}
 
 		[Test]
 		public void ConstructionOfAbsolutePathWithDotDotsLinuxStyle()
 		{
-			Assert.AreEqual("/this/is/yet_can_have_dots", new NPath("/this/is/so/absolute/../../yet_can_have_dots").ToString(SlashMode.Forward));
+			var value = new NPath("/this/is/so/absolute/../../yet_can_have_dots");
+			Assert.AreEqual(3, value.Depth);
+			Assert.AreEqual("/this/is/yet_can_have_dots", value.ToString(SlashMode.Forward));
+		}
+
+		[Test]
+		public void WindowsRootDirectoryIsRoot()
+		{
+			Assert.IsTrue(new NPath("C:\\").IsRoot);
+		}
+
+		[Test]
+		public void WindowsDirectoryIsNotRoot()
+		{
+			Assert.IsFalse(new NPath("C:\\somedir").IsRoot);
+		}
+
+		[Test]
+		public void WindowsRootViaParentIsRoot()
+		{
+			Assert.IsTrue(new NPath("C:\\somedir").Parent.IsRoot);
+		}
+
+		[Test]
+		public void LinuxRootDirectoryIsRoot()
+		{
+			Assert.IsTrue(new NPath("/").IsRoot);
+		}
+
+		[Test]
+		public void LinuxDirectoryIsNotRoot()
+		{
+			Assert.IsFalse(new NPath("/somedir").IsRoot);
+		}
+
+		[Test]
+		public void LinuxRootViaParentIsRoot()
+		{
+			Assert.IsTrue(new NPath("/somedir").Parent.IsRoot);
 		}
 	}
 }

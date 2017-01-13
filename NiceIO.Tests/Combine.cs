@@ -59,5 +59,17 @@ namespace NiceIO.Tests
 		{
 			Assert.AreEqual(new NPath("C:\\somedir"), new NPath("C:\\").Combine("somedir"));
 		}
+
+		[Test]
+		public void CombineResultingInWindowsRootIsRoot()
+		{
+			Assert.IsTrue(new NPath("C:\\somedir").Combine("..").IsRoot);
+		}
+
+		[Test]
+		public void CombineResultingInLinuxRootIsRoot()
+		{
+			Assert.IsTrue(new NPath("/somedir").Combine("..").IsRoot);
+		}
 	}
 }

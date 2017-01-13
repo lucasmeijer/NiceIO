@@ -40,6 +40,16 @@ namespace NiceIO
 			}
 		}
 
+		private NPath(string[] elements, bool isRelative, string driveLetter)
+		{
+			if (elements.Length == 0 && !isRelative && string.IsNullOrEmpty(driveLetter))
+				_isLinuxRoot = true;
+
+			_elements = elements;
+			_isRelative = isRelative;
+			_driveLetter = driveLetter;
+		}
+
 		private string[] ParseSplitStringIntoElements(IEnumerable<string> inputs)
 		{
 			var stack = new List<string>();
@@ -84,13 +94,6 @@ namespace NiceIO
 				return true;
 
 			return split[0].Length != 0 || !split.Any(s => s.Length > 0);
-		}
-
-		private NPath(string[] elements, bool isRelative, string driveLetter)
-		{
-			_elements = elements;
-			_isRelative = isRelative;
-			_driveLetter = driveLetter;
 		}
 
 		public NPath Combine(params string[] append)
@@ -152,6 +155,8 @@ namespace NiceIO
 
 		public NPath ChangeExtension(string extension)
 		{
+			ThrowIfRoot();
+
 			var newElements = (string[])_elements.Clone();
 			newElements[newElements.Length - 1] = Path.ChangeExtension(_elements[_elements.Length - 1], WithDot(extension));
 			if (extension == string.Empty)
@@ -169,7 +174,12 @@ namespace NiceIO
 
 		public string FileName
 		{
-			get { return _elements.Last(); }
+			get
+			{
+				ThrowIfRoot();
+
+				return _elements.Last();
+			}
 		}
 
 		public string FileNameWithoutExtension
@@ -221,6 +231,9 @@ namespace NiceIO
 		{
 			get
 			{
+				if (IsRoot)
+					throw new ArgumentException("A root directory does not have an extension");
+
 				var last = _elements.Last();
 				var index = last.LastIndexOf(".");
 				if (index < 0) return String.Empty;
@@ -245,7 +258,7 @@ namespace NiceIO
 
 		public string ToString(SlashMode slashMode)
 		{
-			if (IsLinuxRoot())
+			if (IsLinuxRoot)
 				return Slash(slashMode).ToString();
 
 			if (_isRelative && _elements.Length == 0)
@@ -373,22 +386,25 @@ namespace NiceIO
 			return _elements.Length == 0;
 		}
 
-		private bool IsLinuxRoot()
+		private bool IsLinuxRoot
 		{
-			return _isLinuxRoot;
+			get { return _isLinuxRoot; }
 		}
 
-		private bool IsWindowsRoot()
+		private bool IsWindowsRoot
 		{
-			if (IsEmpty() && !string.IsNullOrEmpty(_driveLetter))
-				return true;
+			get
+			{
+				if (IsEmpty() && !string.IsNullOrEmpty(_driveLetter))
+					return true;
 
-			return false;
+				return false;
+			}
 		}
 
-		private bool IsRoot()
+		public bool IsRoot
 		{
-			return IsLinuxRoot() || IsWindowsRoot();
+			get { return IsLinuxRoot || IsWindowsRoot; }
 		}
 
 		#endregion inspection
@@ -431,6 +447,7 @@ namespace NiceIO
 		public NPath CreateFile()
 		{
 			ThrowIfRelative();
+			ThrowIfRoot();
 			EnsureParentDirectoryExists();
 			File.WriteAllBytes(ToString(), new byte[0]);
 			return this;
@@ -451,6 +468,10 @@ namespace NiceIO
 		public NPath CreateDirectory()
 		{
 			ThrowIfRelative();
+			
+			if (IsRoot)
+				throw new NotSupportedException("CreateDirectory is not supported on a root level directory because it would be dangerous:" + ToString());
+
 			Directory.CreateDirectory(ToString());
 			return this;
 		}
@@ -534,8 +555,8 @@ namespace NiceIO
 		{
 			ThrowIfRelative();
 
-			if (IsRoot())
-				throw new NotSupportedException("Delete is not supported on this directory because it would be dangerous:" + ToString());
+			if (IsRoot)
+				throw new NotSupportedException("Delete is not supported on a root level directory because it would be dangerous:" + ToString());
 
 			if (FileExists())
 				File.Delete(ToString());
@@ -565,8 +586,8 @@ namespace NiceIO
 		{
 			ThrowIfRelative();
 
-			if (IsRoot())
-				throw new NotSupportedException("DeleteContents is not supported on this directory because it would be dangerous:" + ToString());
+			if (IsRoot)
+				throw new NotSupportedException("DeleteContents is not supported on a root level directory because it would be dangerous:" + ToString());
 
 			if (FileExists())
 				throw new InvalidOperationException("It is not valid to perform this operation on a file");
@@ -610,8 +631,8 @@ namespace NiceIO
 		{
 			ThrowIfRelative();
 
-			if (IsRoot())
-				throw new NotSupportedException("Move is not supported on this directory because it would be dangerous:" + ToString());
+			if (IsRoot)
+				throw new NotSupportedException("Move is not supported on a root level directory because it would be dangerous:" + ToString());
 
 			if (dest.IsRelative)
 				return Move(Parent.Combine(dest));
@@ -673,6 +694,12 @@ namespace NiceIO
 				throw new ArgumentException("You are attempting an operation on a Path that requires an absolute path, but the path is relative");
 		}
 
+		private void ThrowIfRoot()
+		{
+			if (IsRoot)
+				throw new ArgumentException("You are attempting an operation that is not valid on a root level directory");
+		}
+
 		public NPath EnsureDirectoryExists(string append = "")
 		{
 			return EnsureDirectoryExists(new NPath(append));
@@ -722,7 +749,7 @@ namespace NiceIO
 				throw new ArgumentException("You can only call IsChildOf with two relative paths, or with two absolute paths");
 
 			// If the other path is the root directory, then anything is a child of it as long as it's not a Windows path
-			if (potentialBasePath.IsLinuxRoot())
+			if (potentialBasePath.IsLinuxRoot)
 			{
 				if (!string.IsNullOrEmpty(_driveLetter))
 					throw new ArgumentException("You cannot mix Windows rooted paths with Linux rooted paths");
@@ -730,8 +757,13 @@ namespace NiceIO
 			}
 
 			// If the other path is just a drive letter, then anything with the same drive letter is a child of it
-			if (potentialBasePath.IsWindowsRoot() && _driveLetter == potentialBasePath._driveLetter)
-				return true;
+			if (potentialBasePath.IsWindowsRoot)
+			{
+				if (string.IsNullOrEmpty(_driveLetter))
+					throw new ArgumentException("You cannot mix Linux rooted paths with Windows rooted paths");
+				if (_driveLetter == potentialBasePath._driveLetter)
+					return true;
+			}
 
 			if (IsEmpty())
 				return false;
@@ -806,7 +838,7 @@ namespace NiceIO
 		
 		public IEnumerable<NPath> MoveFiles(NPath destination, bool recurse, Func<NPath, bool> fileFilter = null)
 		{
-			if (IsRoot())
+			if (IsRoot)
 				throw new NotSupportedException("MoveFiles is not supported on this directory because it would be dangerous:" + ToString());
 
 			destination.EnsureDirectoryExists();
