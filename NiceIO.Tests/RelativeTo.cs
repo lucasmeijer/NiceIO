@@ -62,7 +62,7 @@ namespace NiceIO.Tests
 		public void PathRelativeWindowsRoot()
 		{
 			var relative = new NPath("C:\\mydir1\\mydir2\\myfile").RelativeTo(new NPath("C:\\"));
-			Assert.AreEqual("mydir1\\mydir2\\myfile", relative.ToString(SlashMode.Forward));
+			Assert.AreEqual("mydir1\\mydir2\\myfile", relative.ToString());
 			Assert.IsTrue(relative.IsRelative);
 		}
 

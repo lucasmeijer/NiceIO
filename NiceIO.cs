@@ -245,7 +245,7 @@ namespace NiceIO
 
 		public string ToString(SlashMode slashMode)
 		{
-			if (_isLinuxRoot && _elements.Length == 0)
+			if (IsLinuxRoot())
 				return Slash(slashMode).ToString();
 
 			if (_isRelative && _elements.Length == 0)
@@ -372,6 +372,25 @@ namespace NiceIO
 		{
 			return _elements.Length == 0;
 		}
+
+		private bool IsLinuxRoot()
+		{
+			return _isLinuxRoot;
+		}
+
+		private bool IsWindowsRoot()
+		{
+			if (IsEmpty() && !string.IsNullOrEmpty(_driveLetter))
+				return true;
+
+			return false;
+		}
+
+		private bool IsRoot()
+		{
+			return IsLinuxRoot() || IsWindowsRoot();
+		}
+
 		#endregion inspection
 
 		#region directory enumeration
@@ -515,6 +534,9 @@ namespace NiceIO
 		{
 			ThrowIfRelative();
 
+			if (IsRoot())
+				throw new NotSupportedException("Delete is not supported on this directory because it would be dangerous:" + ToString());
+
 			if (FileExists())
 				File.Delete(ToString());
 			else if (DirectoryExists())
@@ -542,6 +564,10 @@ namespace NiceIO
 		public NPath DeleteContents()
 		{
 			ThrowIfRelative();
+
+			if (IsRoot())
+				throw new NotSupportedException("DeleteContents is not supported on this directory because it would be dangerous:" + ToString());
+
 			if (FileExists())
 				throw new InvalidOperationException("It is not valid to perform this operation on a file");
 
@@ -583,6 +609,10 @@ namespace NiceIO
 		public NPath Move(NPath dest)
 		{
 			ThrowIfRelative();
+
+			if (IsRoot())
+				throw new NotSupportedException("Move is not supported on this directory because it would be dangerous:" + ToString());
+
 			if (dest.IsRelative)
 				return Move(Parent.Combine(dest));
 
@@ -691,13 +721,17 @@ namespace NiceIO
 			if ((IsRelative && !potentialBasePath.IsRelative) || !IsRelative && potentialBasePath.IsRelative)
 				throw new ArgumentException("You can only call IsChildOf with two relative paths, or with two absolute paths");
 
-			// If the other path is the root directory, then anything is relative to it as long as it's not a Windows path
-			if (potentialBasePath._isLinuxRoot)
+			// If the other path is the root directory, then anything is a child of it as long as it's not a Windows path
+			if (potentialBasePath.IsLinuxRoot())
 			{
 				if (!string.IsNullOrEmpty(_driveLetter))
 					throw new ArgumentException("You cannot mix Windows rooted paths with Linux rooted paths");
 				return true;
 			}
+
+			// If the other path is just a drive letter, then anything with the same drive letter is a child of it
+			if (potentialBasePath.IsWindowsRoot() && _driveLetter == potentialBasePath._driveLetter)
+				return true;
 
 			if (IsEmpty())
 				return false;
@@ -772,6 +806,9 @@ namespace NiceIO
 		
 		public IEnumerable<NPath> MoveFiles(NPath destination, bool recurse, Func<NPath, bool> fileFilter = null)
 		{
+			if (IsRoot())
+				throw new NotSupportedException("MoveFiles is not supported on this directory because it would be dangerous:" + ToString());
+
 			destination.EnsureDirectoryExists();
 			return Files(recurse).Where(fileFilter ?? AlwaysTrue).Select(file => file.Move(destination.Combine(file.RelativeTo(this)))).ToArray();
 		}
@@ -781,11 +818,11 @@ namespace NiceIO
 			return true;
 		}
 
-        private static bool IsLinux()
-        {
-            return Directory.Exists("/proc");
-        }
-    }
+		private static bool IsLinux()
+		{
+			return Directory.Exists("/proc");
+		}
+	}
 
 	public static class Extensions
 	{

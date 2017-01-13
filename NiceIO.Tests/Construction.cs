@@ -112,5 +112,17 @@ namespace NiceIO.Tests
 		{
 			Assert.IsFalse(new NPath("C:\\").IsRelative);
 		}
+
+		[Test]
+		public void ConstructionOfAbsolutePathWithDotDotsWindowsStyle()
+		{
+			Assert.AreEqual("c:\\this\\is\\yet_can_have_dots", new NPath("c:\\this\\is\\so\\absolute\\..\\..\\yet_can_have_dots").ToString());
+		}
+
+		[Test]
+		public void ConstructionOfAbsolutePathWithDotDotsLinuxStyle()
+		{
+			Assert.AreEqual("/this/is/yet_can_have_dots", new NPath("/this/is/so/absolute/../../yet_can_have_dots").ToString(SlashMode.Forward));
+		}
 	}
 }
