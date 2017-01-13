@@ -104,7 +104,7 @@ namespace NiceIO.Tests
 		[Test]
 		public void WindowsRootDirectory()
 		{
-			Assert.AreEqual("C:\\", new NPath("C:\\").ToString());
+			Assert.AreEqual("C:\\", new NPath("C:\\").ToString(SlashMode.Backward));
 		}
 
 		[Test]
@@ -118,7 +118,7 @@ namespace NiceIO.Tests
 		{
 			var value = new NPath("c:\\this\\is\\so\\absolute\\..\\..\\yet_can_have_dots");
 			Assert.AreEqual(3, value.Depth);
-			Assert.AreEqual("c:\\this\\is\\yet_can_have_dots", value.ToString());
+			Assert.AreEqual("c:\\this\\is\\yet_can_have_dots", value.ToString(SlashMode.Backward));
 		}
 
 		[Test]
