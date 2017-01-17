@@ -12,7 +12,6 @@ namespace NiceIO
 
 		private readonly string[] _elements;
 		private readonly bool _isRelative;
-		private readonly bool _isLinuxRoot;
 		private readonly string _driveLetter;
 
 		#region construction
@@ -27,7 +26,6 @@ namespace NiceIO
 			if (path == "/")
 			{
 				_isRelative = false;
-				_isLinuxRoot = true;
 				_elements = new string[] {};
 			}
 			else
@@ -42,12 +40,6 @@ namespace NiceIO
 
 		private NPath(string[] elements, bool isRelative, string driveLetter)
 		{
-			if (elements.Length == 0 && !isRelative && string.IsNullOrEmpty(driveLetter))
-				_isLinuxRoot = true;
-
-			if (_isLinuxRoot && _isRelative)
-				throw new ArgumentException("_isRelative cannot be true when _isLinuxRoot is also true");
-
 			_elements = elements;
 			_isRelative = isRelative;
 			_driveLetter = driveLetter;
@@ -261,7 +253,8 @@ namespace NiceIO
 
 		public string ToString(SlashMode slashMode)
 		{
-			if (IsLinuxRoot)
+			// Check if it's linux root /
+			if (_elements.Length == 0 && !_isRelative && string.IsNullOrEmpty(_driveLetter))
 				return Slash(slashMode).ToString();
 
 			if (_isRelative && _elements.Length == 0)
@@ -389,25 +382,9 @@ namespace NiceIO
 			return _elements.Length == 0;
 		}
 
-		private bool IsLinuxRoot
-		{
-			get { return _isLinuxRoot; }
-		}
-
-		private bool IsWindowsRoot
-		{
-			get
-			{
-				if (IsEmpty() && !string.IsNullOrEmpty(_driveLetter))
-					return true;
-
-				return false;
-			}
-		}
-
 		public bool IsRoot
 		{
-			get { return IsLinuxRoot || IsWindowsRoot; }
+			get { return _elements.Length == 0 && !_isRelative; }
 		}
 
 		#endregion inspection
@@ -752,20 +729,11 @@ namespace NiceIO
 				throw new ArgumentException("You can only call IsChildOf with two relative paths, or with two absolute paths");
 
 			// If the other path is the root directory, then anything is a child of it as long as it's not a Windows path
-			if (potentialBasePath.IsLinuxRoot)
+			if (potentialBasePath.IsRoot)
 			{
-				if (!string.IsNullOrEmpty(_driveLetter))
-					throw new ArgumentException("You cannot mix Windows rooted paths with Linux rooted paths");
+				if (_driveLetter != potentialBasePath._driveLetter)
+					return false;
 				return true;
-			}
-
-			// If the other path is just a drive letter, then anything with the same drive letter is a child of it
-			if (potentialBasePath.IsWindowsRoot)
-			{
-				if (string.IsNullOrEmpty(_driveLetter))
-					throw new ArgumentException("You cannot mix Linux rooted paths with Windows rooted paths");
-				if (_driveLetter == potentialBasePath._driveLetter)
-					return true;
 			}
 
 			if (IsEmpty())

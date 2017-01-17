@@ -164,5 +164,17 @@ namespace NiceIO.Tests
 		{
 			Assert.IsTrue(new NPath("/somedir").Parent.IsRoot);
 		}
+
+		[Test]
+		public void RelativePathWithSingleParentParentIsNotRoot()
+		{
+			Assert.IsFalse(new NPath("somedir").Parent.IsRoot);
+		}
+
+		[Test]
+		public void RelativePathParentIsNotRoot()
+		{
+			Assert.IsFalse(new NPath("somedir1/somedir2/somedir3").Parent.IsRoot);
+		}
 	}
 }
