@@ -134,9 +134,7 @@ namespace NiceIO
 				}
 
 				if (commonParent == null)
-				{
 					throw new ArgumentException("Path.RelativeTo() was unable to find a common parent between " + ToString() + " and " + path);
-				}
 
 				if (IsRelative && path.IsRelative && commonParent.IsEmpty())
 					throw new ArgumentException("Path.RelativeTo() was invoked with two relative paths that do not share a common parent.  Invoked on: " + ToString() + " asked to be made relative to: " + path);
@@ -254,7 +252,7 @@ namespace NiceIO
 		public string ToString(SlashMode slashMode)
 		{
 			// Check if it's linux root /
-			if (_elements.Length == 0 && !_isRelative && string.IsNullOrEmpty(_driveLetter))
+			if (IsRoot && string.IsNullOrEmpty(_driveLetter))
 				return Slash(slashMode).ToString();
 
 			if (_isRelative && _elements.Length == 0)
