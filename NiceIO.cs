@@ -8,7 +8,7 @@ namespace NiceIO
 {
 	public class NPath : IEquatable<NPath>, IComparable
 	{
-		private static readonly StringComparison PathStringComparison = IsLinux() ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
+		private static readonly StringComparison PathStringComparison = IsLinux() ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
 
 		private readonly string[] _elements;
 		private readonly bool _isRelative;
@@ -608,7 +608,7 @@ namespace NiceIO
 			{
 				if (Path.DirectorySeparatorChar == '\\')
 					return new NPath(Environment.GetEnvironmentVariable("USERPROFILE"));
-				return new NPath(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+				return new NPath(Environment.GetEnvironmentVariable("HOME"));
 			}
 		}
 
