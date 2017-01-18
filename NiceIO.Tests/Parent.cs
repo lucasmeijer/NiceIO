@@ -35,6 +35,18 @@ namespace NiceIO.Tests
 		}
 
 		[Test]
+		public void RecursiveParentsStartFromFileToRoot()
+		{
+			var path = new NPath("/mydir/myotherdir/myfile");
+
+			var result = path.RecursiveParents.ToArray();
+
+			Assert.That(result[0], Is.EqualTo(new NPath("/mydir/myotherdir")));
+			Assert.That(result[1], Is.EqualTo(new NPath("/mydir")));
+			Assert.That(result[2], Is.EqualTo(new NPath("/")));
+		}
+
+		[Test]
 		public void RecursiveParentsStartFromFile()
 		{
 			var path = NPath.CurrentDirectory.Combine("mydir/myotherdir/myfile.exe");

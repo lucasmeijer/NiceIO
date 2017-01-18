@@ -23,11 +23,26 @@ namespace NiceIO
 
 			path = ParseDriveLetter(path, out _driveLetter);
 
-			var split = path.Split('/', '\\');
+			if (path == "/")
+			{
+				_isRelative = false;
+				_elements = new string[] {};
+			}
+			else
+			{
+				var split = path.Split('/', '\\');
 
-			_isRelative = _driveLetter == null && IsRelativeFromSplitString(split);
+				_isRelative = _driveLetter == null && IsRelativeFromSplitString(split);
 
-			_elements = ParseSplitStringIntoElements(split.Where(s => s.Length > 0).ToArray());
+				_elements = ParseSplitStringIntoElements(split.Where(s => s.Length > 0).ToArray());
+			}
+		}
+
+		private NPath(string[] elements, bool isRelative, string driveLetter)
+		{
+			_elements = elements;
+			_isRelative = isRelative;
+			_driveLetter = driveLetter;
 		}
 
 		private string[] ParseSplitStringIntoElements(IEnumerable<string> inputs)
@@ -74,13 +89,6 @@ namespace NiceIO
 				return true;
 
 			return split[0].Length != 0 || !split.Any(s => s.Length > 0);
-		}
-
-		private NPath(string[] elements, bool isRelative, string driveLetter)
-		{
-			_elements = elements;
-			_isRelative = isRelative;
-			_driveLetter = driveLetter;
 		}
 
 		public NPath Combine(params string[] append)
@@ -140,6 +148,8 @@ namespace NiceIO
 
 		public NPath ChangeExtension(string extension)
 		{
+			ThrowIfRoot();
+
 			var newElements = (string[])_elements.Clone();
 			newElements[newElements.Length - 1] = Path.ChangeExtension(_elements[_elements.Length - 1], WithDot(extension));
 			if (extension == string.Empty)
@@ -157,7 +167,12 @@ namespace NiceIO
 
 		public string FileName
 		{
-			get { return _elements.Last(); }
+			get
+			{
+				ThrowIfRoot();
+
+				return _elements.Last();
+			}
 		}
 
 		public string FileNameWithoutExtension
@@ -209,6 +224,9 @@ namespace NiceIO
 		{
 			get
 			{
+				if (IsRoot)
+					throw new ArgumentException("A root directory does not have an extension");
+
 				var last = _elements.Last();
 				var index = last.LastIndexOf(".");
 				if (index < 0) return String.Empty;
@@ -233,6 +251,10 @@ namespace NiceIO
 
 		public string ToString(SlashMode slashMode)
 		{
+			// Check if it's linux root /
+			if (IsRoot && string.IsNullOrEmpty(_driveLetter))
+				return Slash(slashMode).ToString();
+
 			if (_isRelative && _elements.Length == 0)
 				return ".";
 
@@ -357,6 +379,12 @@ namespace NiceIO
 		{
 			return _elements.Length == 0;
 		}
+
+		public bool IsRoot
+		{
+			get { return _elements.Length == 0 && !_isRelative; }
+		}
+
 		#endregion inspection
 
 		#region directory enumeration
@@ -397,6 +425,7 @@ namespace NiceIO
 		public NPath CreateFile()
 		{
 			ThrowIfRelative();
+			ThrowIfRoot();
 			EnsureParentDirectoryExists();
 			File.WriteAllBytes(ToString(), new byte[0]);
 			return this;
@@ -417,6 +446,10 @@ namespace NiceIO
 		public NPath CreateDirectory()
 		{
 			ThrowIfRelative();
+			
+			if (IsRoot)
+				throw new NotSupportedException("CreateDirectory is not supported on a root level directory because it would be dangerous:" + ToString());
+
 			Directory.CreateDirectory(ToString());
 			return this;
 		}
@@ -500,6 +533,9 @@ namespace NiceIO
 		{
 			ThrowIfRelative();
 
+			if (IsRoot)
+				throw new NotSupportedException("Delete is not supported on a root level directory because it would be dangerous:" + ToString());
+
 			if (FileExists())
 				File.Delete(ToString());
 			else if (DirectoryExists())
@@ -527,6 +563,10 @@ namespace NiceIO
 		public NPath DeleteContents()
 		{
 			ThrowIfRelative();
+
+			if (IsRoot)
+				throw new NotSupportedException("DeleteContents is not supported on a root level directory because it would be dangerous:" + ToString());
+
 			if (FileExists())
 				throw new InvalidOperationException("It is not valid to perform this operation on a file");
 
@@ -568,6 +608,10 @@ namespace NiceIO
 		public NPath Move(NPath dest)
 		{
 			ThrowIfRelative();
+
+			if (IsRoot)
+				throw new NotSupportedException("Move is not supported on a root level directory because it would be dangerous:" + ToString());
+
 			if (dest.IsRelative)
 				return Move(Parent.Combine(dest));
 
@@ -628,6 +672,12 @@ namespace NiceIO
 				throw new ArgumentException("You are attempting an operation on a Path that requires an absolute path, but the path is relative");
 		}
 
+		private void ThrowIfRoot()
+		{
+			if (IsRoot)
+				throw new ArgumentException("You are attempting an operation that is not valid on a root level directory");
+		}
+
 		public NPath EnsureDirectoryExists(string append = "")
 		{
 			return EnsureDirectoryExists(new NPath(append));
@@ -675,6 +725,14 @@ namespace NiceIO
 		{
 			if ((IsRelative && !potentialBasePath.IsRelative) || !IsRelative && potentialBasePath.IsRelative)
 				throw new ArgumentException("You can only call IsChildOf with two relative paths, or with two absolute paths");
+
+			// If the other path is the root directory, then anything is a child of it as long as it's not a Windows path
+			if (potentialBasePath.IsRoot)
+			{
+				if (_driveLetter != potentialBasePath._driveLetter)
+					return false;
+				return true;
+			}
 
 			if (IsEmpty())
 				return false;
@@ -749,6 +807,9 @@ namespace NiceIO
 		
 		public IEnumerable<NPath> MoveFiles(NPath destination, bool recurse, Func<NPath, bool> fileFilter = null)
 		{
+			if (IsRoot)
+				throw new NotSupportedException("MoveFiles is not supported on this directory because it would be dangerous:" + ToString());
+
 			destination.EnsureDirectoryExists();
 			return Files(recurse).Where(fileFilter ?? AlwaysTrue).Select(file => file.Move(destination.Combine(file.RelativeTo(this)))).ToArray();
 		}
@@ -758,11 +819,11 @@ namespace NiceIO
 			return true;
 		}
 
-        private static bool IsLinux()
-        {
-            return Directory.Exists("/proc");
-        }
-    }
+		private static bool IsLinux()
+		{
+			return Directory.Exists("/proc");
+		}
+	}
 
 	public static class Extensions
 	{

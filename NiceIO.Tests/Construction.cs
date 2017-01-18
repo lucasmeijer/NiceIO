@@ -86,7 +86,95 @@ namespace NiceIO.Tests
 		[Test]
 		public void WithEmptyString()
 		{
-			Assert.AreEqual(".", new NPath("").ToString());
+			Assert.AreEqual(".", new NPath("").ToString(SlashMode.Forward));
+		}
+
+		[Test]
+		public void LinuxRootDirectory()
+		{
+			Assert.AreEqual("/", new NPath("/").ToString(SlashMode.Forward));
+		}
+
+		[Test]
+		public void LinuxRootDirectoryIsNotRelative()
+		{
+			Assert.IsFalse(new NPath("/").IsRelative);
+		}
+
+		[Test]
+		public void WindowsRootDirectory()
+		{
+			Assert.AreEqual("C:\\", new NPath("C:\\").ToString(SlashMode.Backward));
+		}
+
+		[Test]
+		public void WindowsRootDirectoryIsNotRelative()
+		{
+			Assert.IsFalse(new NPath("C:\\").IsRelative);
+		}
+
+		[Test]
+		public void ConstructionOfAbsolutePathWithDotDotsWindowsStyle()
+		{
+			var value = new NPath("c:\\this\\is\\so\\absolute\\..\\..\\yet_can_have_dots");
+			Assert.AreEqual(3, value.Depth);
+			Assert.AreEqual("c:\\this\\is\\yet_can_have_dots", value.ToString(SlashMode.Backward));
+		}
+
+		[Test]
+		public void ConstructionOfAbsolutePathWithDotDotsLinuxStyle()
+		{
+			var value = new NPath("/this/is/so/absolute/../../yet_can_have_dots");
+			Assert.AreEqual(3, value.Depth);
+			Assert.AreEqual("/this/is/yet_can_have_dots", value.ToString(SlashMode.Forward));
+		}
+
+		[Test]
+		public void WindowsRootDirectoryIsRoot()
+		{
+			Assert.IsTrue(new NPath("C:\\").IsRoot);
+		}
+
+		[Test]
+		public void WindowsDirectoryIsNotRoot()
+		{
+			Assert.IsFalse(new NPath("C:\\somedir").IsRoot);
+		}
+
+		[Test]
+		public void WindowsRootViaParentIsRoot()
+		{
+			Assert.IsTrue(new NPath("C:\\somedir").Parent.IsRoot);
+		}
+
+		[Test]
+		public void LinuxRootDirectoryIsRoot()
+		{
+			Assert.IsTrue(new NPath("/").IsRoot);
+		}
+
+		[Test]
+		public void LinuxDirectoryIsNotRoot()
+		{
+			Assert.IsFalse(new NPath("/somedir").IsRoot);
+		}
+
+		[Test]
+		public void LinuxRootViaParentIsRoot()
+		{
+			Assert.IsTrue(new NPath("/somedir").Parent.IsRoot);
+		}
+
+		[Test]
+		public void RelativePathWithSingleParentParentIsNotRoot()
+		{
+			Assert.IsFalse(new NPath("somedir").Parent.IsRoot);
+		}
+
+		[Test]
+		public void RelativePathParentIsNotRoot()
+		{
+			Assert.IsFalse(new NPath("somedir1/somedir2/somedir3").Parent.IsRoot);
 		}
 	}
 }

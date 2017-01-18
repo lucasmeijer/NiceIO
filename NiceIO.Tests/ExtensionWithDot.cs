@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace NiceIO.Tests
 {
@@ -21,6 +22,24 @@ namespace NiceIO.Tests
 		public void FileWithMultipleDots()
 		{
 			Assert.AreEqual(".exe", new NPath("myfile.something.something.exe").ExtensionWithDot);
+		}
+
+		[Test]
+		public void ExtensionWithDotOnLinuxRoot()
+		{
+			Assert.Throws<ArgumentException>(() =>
+			{
+				var result = new NPath("/").ExtensionWithDot;
+			});
+		}
+
+		[Test]
+		public void ExtensionWithDotOnWindowsRoot()
+		{
+			Assert.Throws<ArgumentException>(() =>
+			{
+				var result = new NPath("C:\\").ExtensionWithDot;
+			});
 		}
 	}
 }

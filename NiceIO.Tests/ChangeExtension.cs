@@ -40,5 +40,17 @@ namespace NiceIO.Tests
 			var actual = new NPath("/my/path/file.something.exe").ChangeExtension(string.Empty);
 			Assert.AreEqual(expected, actual);
 		}
+
+		[Test]
+		public void BlockedOnWindowsRoot()
+		{
+			Assert.Throws<ArgumentException>(() => new NPath("C:\\").ChangeExtension(".txt"));
+		}
+
+		[Test]
+		public void BlockedOnLinuxRoot()
+		{
+			Assert.Throws<ArgumentException>(() => new NPath("/").ChangeExtension(".txt"));
+		}
 	}
 }

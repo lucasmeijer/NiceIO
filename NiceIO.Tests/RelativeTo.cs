@@ -59,6 +59,34 @@ namespace NiceIO.Tests
 		}
 
 		[Test]
+		public void PathRelativeWindowsRoot()
+		{
+			var relative = new NPath("C:\\mydir1\\mydir2\\myfile").RelativeTo(new NPath("C:\\"));
+			Assert.AreEqual("mydir1\\mydir2\\myfile", relative.ToString(SlashMode.Backward));
+			Assert.IsTrue(relative.IsRelative);
+		}
+
+		[Test]
+		public void PathRelativeLinuxRoot()
+		{
+			var relative = new NPath("/mydir1/mydir2/myfile").RelativeTo(new NPath("/"));
+			Assert.AreEqual("mydir1/mydir2/myfile", relative.ToString(SlashMode.Forward));
+			Assert.IsTrue(relative.IsRelative);
+		}
+
+		[Test]
+		public void WindowsPathRelativeToLinuxRootThrows()
+		{
+			Assert.Throws<ArgumentException>(() => new NPath("C:\\mydir1\\mydir2\\myfile").RelativeTo(new NPath("/")));
+		}
+
+		[Test]
+		public void LinuxPathRelativeToWindowsRootThrows()
+		{
+			Assert.Throws<ArgumentException>(() => new NPath("/mydir1/mydir2/myfile").RelativeTo(new NPath("C:\\")));
+		}
+
+		[Test]
 		public void WhenNotAChildSameLevel()
 		{
 			var relative = new NPath("/mydir1/mydir2/myfile").RelativeTo(new NPath("/mydir1/mydir2/mydir3"));
