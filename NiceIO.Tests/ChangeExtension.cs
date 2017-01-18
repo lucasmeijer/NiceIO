@@ -42,13 +42,13 @@ namespace NiceIO.Tests
 		}
 
 		[Test]
-		public void BlockedOnWindowsRoot()
+		public void CannotChangeTheExtensionOfAWindowsRootDirectory()
 		{
 			Assert.Throws<ArgumentException>(() => new NPath("C:\\").ChangeExtension(".txt"));
 		}
 
 		[Test]
-		public void BlockedOnLinuxRoot()
+		public void CannotChangeTheExtensionOfALinuxRootDirectory()
 		{
 			Assert.Throws<ArgumentException>(() => new NPath("/").ChangeExtension(".txt"));
 		}
