@@ -64,10 +64,24 @@ namespace NiceIO.Tests
 		}
 
 		[Test]
+		public void WithDotInPath()
+		{
+			var path = new NPath("/mydir/./myfile.txt");
+			Assert.AreEqual("/mydir/myfile.txt", path.ToString(SlashMode.Forward));
+		}
+
+		[Test]
 		public void WithDotDotInPath()
 		{
 			var path = new NPath("/mydir/../myotherdir/myfile.txt");
 			Assert.AreEqual("/myotherdir/myfile.txt", path.ToString(SlashMode.Forward));			
+		}
+
+		[Test]
+		public void WithDotInStartOfRelativePath()
+		{
+			var path = new NPath("./myotherdir/myfile.txt");
+			Assert.AreEqual("./myotherdir/myfile.txt", path.ToString(SlashMode.Forward));
 		}
 
 		[Test]

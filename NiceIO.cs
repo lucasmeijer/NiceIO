@@ -51,7 +51,12 @@ namespace NiceIO
 
 			foreach (var input in inputs.Where(input => input.Length != 0))
 			{
-				if (input == "..")
+				if (input == ".")
+				{
+					if ((stack.Count > 0) && (stack.Last() != "."))
+						continue;
+				}
+				else if (input == "..")
 				{
 					if (HasNonDotDotLastElement(stack))
 					{
