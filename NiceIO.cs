@@ -283,6 +283,11 @@ namespace NiceIO
 			return sb.ToString();
 		}
 
+		public static implicit operator string(NPath path)
+		{
+			return path.ToString();
+		}
+
 		static char Slash(SlashMode slashMode)
 		{
 			switch (slashMode)
