@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
@@ -38,6 +39,17 @@ namespace NiceIO.Tests
 		public void InQuotesOnMultiplePaths()
 		{
 			CollectionAssert.AreEqual(new[] { @"""a/b""", @"""c/d""" }, new[] { new NPath("a/b"), new NPath("c/d"), }.InQuotes(SlashMode.Forward));	
+		}
+
+		[Test]
+		public void ImplicitStringHasNativeSlashes()
+		{
+			string expected = "a" + Path.DirectorySeparatorChar + "b";
+			string actualfwd = new NPath("a/b");
+			string actualbck = new NPath(@"a\b");
+
+			Assert.AreEqual(expected, actualfwd);
+			Assert.AreEqual(expected, actualbck);
 		}
 	}
 }
