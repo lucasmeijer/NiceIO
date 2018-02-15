@@ -12,13 +12,16 @@ namespace NiceIO.Tests
 		[SetUp]
 		public void Setup()
 		{
+			NPath.FileSystem = new FileSystem();
 			_tempPath = NPath.CreateTempDirectory("NiceIOTest");
+			NPath.FileSystem.SetCurrentDirectory(_tempPath);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
 			_tempPath.Delete();
+			NPath.FileSystem = null;
 		}
 
 		protected void PopulateTempDir(string[] entries)
