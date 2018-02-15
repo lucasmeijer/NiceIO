@@ -37,6 +37,12 @@ namespace NiceIO.Tests
 		}
 
 		[Test]
+		public void CombiningDotDotOntoRelativePathWithDotDot()
+		{
+			Assert.AreEqual(new NPath("../other/myfile"), new NPath("../parent/somedir/somedir2").Combine(new NPath("../../../other/myfile")));
+		}
+
+		[Test]
 		public void WithMultipleArguments()
 		{
 			Assert.AreEqual(new NPath("/a/b/c/d/e"), new NPath("/a").Combine("b", "c/d", "e"));

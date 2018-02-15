@@ -13,7 +13,7 @@ namespace NiceIO.Tests
 		[Test]
 		public void TwoLevelsDown()
 		{
-			PopulateTempDir(new [] { "somedir/","somedir/dir2/","somedir/dir2/myfile", "somedir/needle"});
+			PopulateTempDir(new[] { "somedir/", "somedir/dir2/", "somedir/dir2/myfile", "somedir/needle" });
 
 			Assert.AreEqual(_tempPath.Combine("somedir"), _tempPath.Combine("somedir/dir2/myfile").ParentContaining("needle"));
 		}
@@ -23,13 +23,15 @@ namespace NiceIO.Tests
 		{
 			PopulateTempDir(new[] { "somedir/", "somedir/dir2/", "somedir/dir2/myfile" });
 
-			Assert.IsNull(_tempPath.Combine("somedir/dir2/myfile").ParentContaining("nonexisting"));
+			var nonExistingParent = _tempPath.Combine("somedir/dir2/myfile").ParentContaining("nonexisting");
+			Assert.IsFalse(nonExistingParent.IsInitialized);
+			Assert.AreEqual(NPath.Default, nonExistingParent);
 		}
 
 		[Test]
 		public void WithComplexNeedle()
 		{
-			PopulateTempDir(new[] { "somedir/", "somedir/dir2/", "somedir/dir2/myfile" ,"needledir/","needledir/needlefile"});
+			PopulateTempDir(new[] { "somedir/", "somedir/dir2/", "somedir/dir2/myfile", "needledir/", "needledir/needlefile" });
 
 			Assert.AreEqual(_tempPath, _tempPath.Combine("somedir/dir2/myfile").ParentContaining(new NPath("needledir/needlefile")));
 		}
