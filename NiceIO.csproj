@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <LangVersion>10</LangVersion>
+    <LangVersion>9</LangVersion>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <DefineConstants>NICEIO_PUBLIC</DefineConstants>
   </PropertyGroup>
