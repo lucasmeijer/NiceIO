@@ -1,7 +1,6 @@
 # NiceIO 
-Windows: [![Build status](https://ci.appveyor.com/api/projects/status/63fq5clxy264xb80?svg=true)](https://ci.appveyor.com/project/LucasMeijer/niceio)
-OSX: [![Build status](https://travis-ci.org/lucasmeijer/NiceIO.svg?branch=master)](https://travis-ci.org/lucasmeijer/NiceIO)
-
+[![build and 
+test](https://github.com/lucasmeijer/NiceIO/actions/workflows/test.yml/badge.svg)](https://github.com/lucasmeijer/NiceIO/actions/workflows/test.yml)
 
 For when you've had to use System.IO one time too many. 
 
