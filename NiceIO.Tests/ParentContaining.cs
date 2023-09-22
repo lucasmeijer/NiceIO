@@ -1,8 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using NUnit.Framework;
 
 namespace NiceIO.Tests
@@ -37,7 +32,9 @@ namespace NiceIO.Tests
 		[Test]
 		public void InRelativePath()
 		{
-			Assert.Throws<ArgumentException>(() => new NPath("this/is/relative").ParentContaining("needle"));
+			PopulateTempDir(new[] { "somedir/", "somedir/dir2/", "somedir/dir2/myfile" ,"needledir/","needledir/needlefile"});
+			using (NPath.SetCurrentDirectory(_tempPath))
+				Assert.AreEqual(new NPath(""), new NPath("somedir/dir2/myfile").ParentContaining("needledir/needlefile"));
 		}
 	}
 }

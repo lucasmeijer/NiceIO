@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using NUnit.Framework;
 
 namespace NiceIO.Tests
@@ -50,17 +49,12 @@ namespace NiceIO.Tests
 		}
 
 		[Test]
-		public void WithRelativeSource()
+		public void WithRelativeSourceAndDestination()
 		{
-			Assert.Throws<ArgumentException>(() => new NPath("somedir/somefile").Move(new NPath("irrelevant")));
-		}
-		
-		[Test]
-		public void WithRelativeDestination()
-		{
-			PopulateTempDir(new[] { "myfile.txt" });
-			_tempPath.Combine("myfile.txt").Move(new NPath("newfile"));
-			AssertTempDir(new [] {"newfile"});
+			PopulateTempDir(new[] { "somedir/", "somedir/myfile.txt" });
+			using (NPath.SetCurrentDirectory(_tempPath))
+				new NPath("somedir/myfile.txt").Move(new NPath("irrelevant"));
+			AssertTempDir(new[] { "somedir/", "irrelevant" });
 		}
 	}
 }

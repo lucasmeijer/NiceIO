@@ -1,7 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 
 namespace NiceIO.Tests
@@ -23,7 +19,7 @@ namespace NiceIO.Tests
 		{
 			var path1 = NPath.CurrentDirectory.Combine("myfile.txt");
 
-			Assert.That(path1.CompareTo(null), Is.EqualTo(-1));
+			Assert.That(path1.CompareTo(null), Is.LessThan(0));
 		}
 
 		[Test]
@@ -42,7 +38,7 @@ namespace NiceIO.Tests
 			var path1 = NPath.CurrentDirectory.Combine("myfile.txt");
 			var path2 = new NPath("myfile.txt");
 
-			Assert.That(path1.CompareTo(path2), Is.EqualTo(-1));
+			Assert.That(path1.CompareTo(path2), Is.LessThan(0));
 		}
 
 		[Test]
@@ -51,7 +47,7 @@ namespace NiceIO.Tests
 			var path1 = new NPath("myfile.txt");
 			var path2 = NPath.CurrentDirectory.Combine("myfile.txt");
 
-			Assert.That(path1.CompareTo(path2), Is.EqualTo(1));
+			Assert.That(path1.CompareTo(path2), Is.GreaterThan(0));
 		}
 
 		[Test]
@@ -60,7 +56,7 @@ namespace NiceIO.Tests
 			var path1 = NPath.CurrentDirectory.Combine("myfile.txt");
 			var path2 = NPath.CurrentDirectory.Combine("otherfile.txt");
 
-			Assert.That(path1.CompareTo(path2), Is.EqualTo(-1));
+			Assert.That(path1.CompareTo(path2), Is.LessThan(0));
 		}
 	}
 }

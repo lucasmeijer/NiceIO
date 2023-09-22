@@ -6,13 +6,22 @@ namespace NiceIO.Tests
 	[TestFixture]
 	public class CreateTempDirectory
 	{
+		NPath m_TempDir;
+
 		[Test]
 		public void Test()
 		{
-			var path = NPath.CreateTempDirectory("myprefix");
-			Assert.IsTrue(Directory.Exists(path.ToString()));
-			Assert.IsFalse(path.IsRelative);
-			StringAssert.Contains("myprefix", path.ToString());
+			const string prefix = "NiceIO-CreateTempDirectory";
+			m_TempDir = NPath.CreateTempDirectory(prefix);
+			Assert.That(Directory.Exists(m_TempDir.ToString()));
+			Assert.That(m_TempDir.IsRelative, Is.False);
+			Assert.That(m_TempDir.ToString(), Does.Contain("/" + prefix));
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			m_TempDir?.DeleteIfExists();
 		}
 	}
 }

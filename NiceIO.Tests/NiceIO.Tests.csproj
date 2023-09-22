@@ -1,98 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F0E8C359-CF8D-4683-98F1-AA0CAC8B1B89}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NiceIO.Tests</RootNamespace>
-    <AssemblyName>NiceIO.Tests</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
+    <ProjectReference Include="../NiceIO.csproj"/>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChangeExtension.cs" />
-    <Compile Include="Combine.cs" />
-    <Compile Include="Compare.cs" />
-    <Compile Include="Construction.cs" />
-    <Compile Include="CopyFiles.cs" />
-    <Compile Include="CopyDirectory.cs" />
-    <Compile Include="CopyFile.cs" />
-    <Compile Include="CopyAndMoveFiles.cs" />
-    <Compile Include="Create.cs" />
-    <Compile Include="CreateTempDirectory.cs" />
-    <Compile Include="Delete.cs" />
-    <Compile Include="Elements.cs" />
-    <Compile Include="EnsureDirectoryExists.cs" />
-    <Compile Include="Equality.cs" />
-    <Compile Include="Exists.cs" />
-    <Compile Include="Contents.cs" />
-    <Compile Include="ExtensionWithDot.cs" />
-    <Compile Include="GetHashCode.cs" />
-    <Compile Include="HasExtension.cs" />
-    <Compile Include="IsChildOf.cs" />
-    <Compile Include="MoveDirectory.cs" />
-    <Compile Include="MoveFile.cs" />
-    <Compile Include="ParentContaining.cs" />
-    <Compile Include="RelativeTo.cs" />
-    <Compile Include="SpecialPaths.cs" />
-    <Compile Include="TempDir.cs" />
-    <Compile Include="TestWithTempDir.cs" />
-    <Compile Include="Parent.cs" />
-    <Compile Include="ToString.cs" />
-    <Compile Include="WriteOperations.cs" />
-    <Compile Include="FileNameWithoutExtension.cs" />
+    <PackageReference Include="Moq" Version="4.20.69" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NiceIO.csproj">
-      <Project>{C2AA4CB4-ED9B-46D3-957E-AA2F242FB5C3}</Project>
-      <Name>NiceIO</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
