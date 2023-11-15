@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
@@ -6,6 +6,8 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceIO", "NiceIO.csproj", "{A3B15020-F3E0-40E6-B3E5-F851255F424F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceIO.Tests", "NiceIO.Tests\NiceIO.Tests.csproj", "{AC76E796-A1C5-44D7-84F5-88BFD0908767}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceIO.PackageTest", "NiceIO.PackageTest\NiceIO.PackageTest.csproj", "{7BA16958-FDAE-411E-9EE2-81563B3D4A69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
