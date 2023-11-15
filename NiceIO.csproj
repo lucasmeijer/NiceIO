@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>9</LangVersion>
@@ -8,4 +8,20 @@
   <ItemGroup>
     <Compile Include="NiceIO.cs"/>
   </ItemGroup>
+
+  <!-- macro-ize the namespace, and make class partial so package users can add statics -->
+  <!-- usage: `dotnet pack -p:NuspecFile=NiceIO.nuspec` -->
+  
+  <Target Name="PrePack" BeforeTargets="GenerateNuspec"> <!-- we're not actually using the generated nuspec, but this is a convenient spot to generate the .pp -->
+    <WriteLinesToFile
+      File="obj/pack/NiceIO.cs.pp"
+      Lines="$(
+        [System.IO.File]::ReadAllText('NiceIO.cs')
+          .Replace('namespace NiceIO','namespace $NICEIO_NAMESPACE$')
+          .Replace('NiceIO.','$NICEIO_NAMESPACE$.')
+          .Replace('class NPath','partial class NPath') 
+        )"
+      Overwrite="true">
+    </WriteLinesToFile>
+  </Target>
 </Project>

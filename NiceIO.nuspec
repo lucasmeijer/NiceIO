@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- this needs to be done as a nuspec rather than generated from the csproj because
+     generation will mark the .pp in the generated .nuspec as "buildAction=none", which
+     prevents the project trying to compile with it. -->
+<package xmlns="http://schemas.microsoft.com/packaging/2016/06/nuspec.xsd">
+  <metadata>
+    <id>NiceIO</id>
+    <version>1.0.0</version>
+    <title>NiceIO</title>
+    <description>For when you've had to use System.IO one time too many.</description>
+    <authors>Lucas Meijer</authors>
+    <repository type="git" url="https://github.com/lucasmeijer/NiceIO" />
+    <license type="expression">MIT</license>
+    <readme>README.md</readme>
+    <contentFiles>
+    </contentFiles>
+  </metadata>
+  <files>
+    <file src="README.md" />
+    <file src="obj/pack/NiceIO.cs.pp" target="contentFiles/cs/netstandard2.0/NiceIO.cs.pp" />
+  </files>
+</package>
